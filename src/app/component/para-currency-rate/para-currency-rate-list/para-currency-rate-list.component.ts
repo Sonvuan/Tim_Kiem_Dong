@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 
 
@@ -54,28 +55,29 @@ export class ParaCurrencyRateListComponent implements OnInit {
     private service: ParaCurrencyRateService,
     private route: ActivatedRoute,
     private router: Router,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
     this.loadList(this.currentPage, this.pageSize);
 
-    this.route.queryParams.subscribe(params => {
-      if (params['saved']) {
-        this.saved = true;
-        setTimeout(() => this.saved = false, 3000);
-        this.router.navigate([], { queryParams: { saved: null }, queryParamsHandling: 'merge' });
-      }
-      if (params['deleted']) {
-        this.deleted = true;
-        setTimeout(() => this.deleted = false, 3000);
-        this.router.navigate([], { queryParams: { deleted: null }, queryParamsHandling: 'merge' });
-      }
-      if (params['edit']) {
-        this.edit = true;
-        setTimeout(() => this.edit = false, 3000);
-        this.router.navigate([], { queryParams: { edit: null }, queryParamsHandling: 'merge' });
-      }
-    });
+    // this.route.queryParams.subscribe(params => {
+    //   if (params['saved']) {
+    //     this.saved = true;
+    //     setTimeout(() => this.saved = false, 3000);
+    //     this.router.navigate([], { queryParams: { saved: null }, queryParamsHandling: 'merge' });
+    //   }
+    //   if (params['deleted']) {
+    //     this.deleted = true;
+    //     setTimeout(() => this.deleted = false, 3000);
+    //     this.router.navigate([], { queryParams: { deleted: null }, queryParamsHandling: 'merge' });
+    //   }
+    //   if (params['edit']) {
+    //     this.edit = true;
+    //     setTimeout(() => this.edit = false, 3000);
+    //     this.router.navigate([], { queryParams: { edit: null }, queryParamsHandling: 'merge' });
+    //   }
+    // });
   }
 
   // load lại dannh sách
@@ -124,32 +126,30 @@ export class ParaCurrencyRateListComponent implements OnInit {
 
 
   // xoá
-  delete(id?: number) {
-    if (!id) return;
+delete(id?: number) {
+  if (!id) return;
 
-    Swal.fire({
-      title: 'Bạn có chắc muốn xóa?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy',
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.service.delete(id).subscribe({
-          next: () => {
-            this.deleted = true;
-            this.loadList(this.currentPage, this.pageSize);
-            setTimeout(() => {
-              this.deleted = false;
-            }, 3000);
-          },
-          error: () => {
-            Swal.fire('Lỗi', 'Xóa thất bại', 'error');
-          }
-        });
-      }
-    });
-  }
+  Swal.fire({
+    title: 'Bạn có chắc muốn xóa?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Xác nhận',
+    cancelButtonText: 'Hủy',
+  }).then(result => {
+    if (result.isConfirmed) {
+      this.service.delete(id).subscribe({
+        next: () => {
+          this.toastr.success('Xóa thành công', 'Thành công');
+          this.loadList(this.currentPage, this.pageSize);
+        },
+        error: () => {
+          this.toastr.error('Xóa thất bại', 'Lỗi');
+        }
+      });
+    }
+  });
+}
+
 
   // chuyển trang khi thêm
   goToAdd(){

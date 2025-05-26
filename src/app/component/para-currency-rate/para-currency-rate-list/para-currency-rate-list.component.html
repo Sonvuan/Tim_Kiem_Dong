@@ -244,11 +244,9 @@
             [(ngModel)]="currentPage" [itemsPerPage]="pageSize" (pageChanged)="pageChanged($event)" [maxSize]="5"
             [boundaryLinks]="true" previousText="Trước" nextText="Sau" firstText="Đầu" lastText="Cuối">
         </pagination>
-
-
     </div>
     <!-- Toast thông báo lưu thành công -->
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    <!-- <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
         <div class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive"
             aria-atomic="true" *ngIf="saved">
             <div class="d-flex">
@@ -280,5 +278,5 @@
                     (click)="edit = false"></button>
             </div>
         </div>
-    </div>
+    </div> -->
     

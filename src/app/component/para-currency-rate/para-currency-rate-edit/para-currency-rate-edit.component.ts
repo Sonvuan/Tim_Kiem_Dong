@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ParaCurrencyRateService } from '../../services/para-currency-rate.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-para-currency-rate-edit',
@@ -19,7 +20,8 @@ export class ParaCurrencyRateEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private paraService: ParaCurrencyRateService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
  ngOnInit(): void {
@@ -49,7 +51,8 @@ export class ParaCurrencyRateEditComponent implements OnInit {
     if (paraForm.invalid) return;
     this.paraService.update(this.id, this.para).subscribe({
       next: () => {
-        this.router.navigate([''], { queryParams: { saved: true } });
+        this.toastr.success('Cập nhật tỷ giá thành công!', 'Thông báo');
+        this.router.navigate([''] );
       },
       error: err => {
         console.error('Lỗi lưu dữ liệu:', err);
