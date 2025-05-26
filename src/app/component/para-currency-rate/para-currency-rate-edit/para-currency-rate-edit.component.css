@@ -68,6 +68,11 @@ form .alert-danger {
   padding: 10px 15px;
 }
 
+.mt-4 {
+  display: flex;
+  justify-content: flex-end; /* đẩy các nút sang bên phải */
+  gap: 8px; /* khoảng cách giữa các nút */
+}
 /* Responsive hàng ngang (cho group FC) */
 @media (min-width: 768px) {
   .d-flex.flex-wrap.gap-3 > div {

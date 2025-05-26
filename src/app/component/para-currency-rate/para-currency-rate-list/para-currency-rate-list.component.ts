@@ -3,12 +3,15 @@ import { ParaCurrencyRateService } from '../../services/para-currency-rate.servi
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-para-currency-rate-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule ],
+  imports: [CommonModule, FormsModule, RouterModule, PaginationModule, NgxPaginationModule],
   templateUrl: './para-currency-rate-list.component.html',
   styleUrls: ['./para-currency-rate-list.component.css']
 })
@@ -16,39 +19,44 @@ export class ParaCurrencyRateListComponent implements OnInit {
   list: any[] = [];
   model: any = {};
   searchInput: any = {
-    "currency": "",
-    "currencyName": "",
-    "currencyHoliday": "",
-    "fcPurchase": "",
-    "fcSale": "",
-    "cashTransaction": "",
-    "currencyExchange": "",
-    "vndGlAccount": '',
-    "fcGlAccount": '',
-    "country": "",
-    "buyingRate": '',
-    "brCashHigh": '',
-    "brCashLow": '',
-    "sellingRate": '',
-    "intermediateRate": '',
-    "paraStatus": '',
-    "activeStatus": '',
-    "jsonData": ""
+    currency: '',
+    currencyName: '',
+    currencyHoliday: '',
+    fcPurchase: '',
+    fcSale: '',
+    cashTransaction: '',
+    currencyExchange: '',
+    vndGlAccount: '',
+    fcGlAccount: '',
+    country: '',
+    buyingRate: '',
+    brCashHigh: '',
+    brCashLow: '',
+    sellingRate: '',
+    intermediateRate: '',
+    paraStatus: '',
+    activeStatus: '',
+    jsonData: ''
   };
 
   totalPages = 0;
   totalElements = 0;
-  currentPage = 0;
+  currentPage = 1;
   deleted = false;
   saved = false;
   edit = false;
-  constructor(private service: ParaCurrencyRateService,
+  pageSize = 5;
+  isSearching = false;
+  goToPageInput = 1;
+
+  constructor(
+    private service: ParaCurrencyRateService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.loadList();
+    this.loadList(this.currentPage, this.pageSize);
 
     this.route.queryParams.subscribe(params => {
       if (params['saved']) {
@@ -69,19 +77,52 @@ export class ParaCurrencyRateListComponent implements OnInit {
     });
   }
 
-  loadList(page = 0, size = 5) {
-    this.currentPage = page;
-    this.service.list({ page, size }).subscribe({
-      next: (data) => {
+  // load lại dannh sách
+  loadList(page: number = 1, size: number = this.pageSize) {
+  
+    this.service.list({ page: page - 1, size }).subscribe({
+      next: data => {
         this.list = data.content;
         this.totalPages = data.totalPages;
         this.totalElements = data.totalElements;
         this.currentPage = page;
+        this.pageSize = size; 
       },
-      error: (err) => console.error('Lỗi load danh sách:', err),
+      error: err => console.error('Lỗi load danh sách:', err),
     });
   }
 
+  // Hàm gọi khi người dùng click chuyển trang
+  pageChanged(event: any) {
+    if (this.isSearching) {
+      this.search(event.page, this.pageSize);
+    } else {
+      this.loadList(event.page, this.pageSize);
+    }
+  }
+
+
+  // Khi thay đổi số bản ghi trên trang
+  onSizeChange(event: Event) {
+    const input = event.target as HTMLInputElement | null;
+    const value = input?.value ? Number(input.value) : this.pageSize;
+    if (value > 0) {
+      this.loadList(1, value);
+    }
+  }
+
+  //khi nhảy trang
+  goToPage() {
+    if (!this.goToPageInput || this.goToPageInput < 1 || this.goToPageInput > this.totalPages) {
+      Swal.fire('Thông báo', 'Số trang không hợp lệ', 'warning');
+      return;
+    }
+    this.currentPage = this.goToPageInput;
+
+  }
+
+
+  // xoá
   delete(id?: number) {
     if (!id) return;
 
@@ -91,101 +132,107 @@ export class ParaCurrencyRateListComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',
       cancelButtonText: 'Hủy',
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         this.service.delete(id).subscribe({
           next: () => {
-            this.deleted = true; // bật toast thành công
-            this.loadList(this.currentPage);
-            this.resetForm();
+            this.deleted = true;
+            this.loadList(this.currentPage, this.pageSize);
             setTimeout(() => {
               this.deleted = false;
             }, 3000);
           },
-          error: (err) => {
+          error: () => {
             Swal.fire('Lỗi', 'Xóa thất bại', 'error');
           }
         });
       }
     });
   }
-goToEdit(item: any) {
-  this.router.navigate(['/edit'], {
-    state: { data: item }
-  });
-}
+
+  // chuyển trang khi thêm
+  goToAdd(){
+    this.router.navigate(['/add'])
+  }
+
+  // chuyển trang khi ấn sửa
+  goToEdit(item: any) {
+    this.router.navigate(['/edit'], {
+      state: { data: item }
+    });
+  }
+
+  // hàm tìm kiếm động
   search(page?: number, size?: number) {
-    const reqPage = page ?? this.searchInput.page ?? 0;
-    const reqSize = size ?? this.searchInput.size ?? 5;
+    const reqPage = page ?? 1;
+    const reqSize = size ?? this.pageSize;
+
+    this.isSearching = true;
 
     const searchBody = {
       search: this.searchInput,
-      page: reqPage,
+      page: reqPage - 1,
       size: reqSize
     };
 
-    // tìm kiếm theo specification
+    // gọi api tìm kiếm động
     this.service.findBySpec(searchBody).subscribe({
-      next: (data) => {
-        console.log('Kết quả trả về:', data);
+      next: data => {
         this.list = data.content;
         this.totalPages = data.totalPages;
         this.totalElements = data.totalElements;
         this.currentPage = reqPage;
+        this.pageSize = reqSize;
       },
-      error: (err) => console.error('Lỗi tìm kiếm:', err),
+      error: err => console.error('Lỗi tìm kiếm:', err),
     });
-
-    // tìm kiếm theo nativequery
     //  this.service.findByNav(searchBody).subscribe({
-    //   next: (data) => {
-    //      console.log('Kết quả trả về:', data);
+    //   next: data => {
     //     this.list = data.content;
     //     this.totalPages = data.totalPages;
     //     this.totalElements = data.totalElements;
-    //     this.currentPage = page;
+    //     this.currentPage = reqPage;
+    //     this.pageSize = reqSize;
     //   },
-    //   error: (err) => console.error('Lỗi tìm kiếm:', err),
+    //   error: err => console.error('Lỗi tìm kiếm:', err),
+    // });
+    //  this.service.findByPro(searchBody).subscribe({
+    //   next: data => {
+    //     this.list = data.content;
+    //     this.totalPages = data.totalPages;
+    //     this.totalElements = data.totalElements;
+    //     this.currentPage = reqPage;
+    //     this.pageSize = reqSize;
+    //   },
+    //   error: err => console.error('Lỗi tìm kiếm:', err),
     // });
 
-    // tìm kiếm theo procedure
-    //  this.service.findByPro(searchBody).subscribe({
-    //   next: (data) => {
-    //      console.log('Kết quả trả về:', data);
-    //     this.list = data.content;
-    //     this.totalPages = data.totalPages;
-    //     this.totalElements = data.totalElements;
-    //     this.currentPage = page;
-    //   },
-    //   error: (err) => console.error('Lỗi tìm kiếm:', err),
-    // });
   }
 
-
+  // reset form
   reset() {
     this.searchInput = {
-       "currency": "",
-    "currencyName": "",
-    "currencyHoliday": "",
-    "fcPurchase": "",
-    "fcSale": "",
-    "cashTransaction": "",
-    "currencyExchange": "",
-    "vndGlAccount": '',
-    "fcGlAccount": '',
-    "country": "",
-    "buyingRate": '',
-    "brCashHigh": '',
-    "brCashLow": '',
-    "sellingRate": '',
-    "intermediateRate": '',
-    "paraStatus": '',
-    "activeStatus": '',
-    "jsonData": ""
+      currency: '',
+      currencyName: '',
+      currencyHoliday: '',
+      fcPurchase: '',
+      fcSale: '',
+      cashTransaction: '',
+      currencyExchange: '',
+      vndGlAccount: '',
+      fcGlAccount: '',
+      country: '',
+      buyingRate: '',
+      brCashHigh: '',
+      brCashLow: '',
+      sellingRate: '',
+      intermediateRate: '',
+      paraStatus: '',
+      activeStatus: '',
+      jsonData: ''
     };
-    this.search();
+    this.search(1, this.pageSize);
   }
-  resetForm() {
-    this.model = {};
-  }
+
+
 }

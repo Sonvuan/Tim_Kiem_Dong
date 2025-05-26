@@ -1,4 +1,4 @@
-Khoảng cách giữa các label và input
+
 form label {
   font-weight: 500;
   margin-bottom: 5px;
@@ -67,6 +67,12 @@ form .alert-danger {
   border-radius: 8px;
   padding: 10px 15px;
 }
+.mt-4 {
+  display: flex;
+  justify-content: flex-end; /* đẩy các nút sang bên phải */
+  gap: 8px; /* khoảng cách giữa các nút */
+}
+
 
 /* Responsive hàng ngang (cho group FC) */
 @media (min-width: 768px) {

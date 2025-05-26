@@ -9,6 +9,10 @@ export class ParaCurrencyRateService {
 
   constructor(private http: HttpClient) {}
 
+  getAll(data:any):Observable<any>{
+    return this.http.post(`${API_URL}/getAll`,data);
+  }
+
   list(searchInput: any): Observable<any> {
     return this.http.post(`${API_URL}/list`, searchInput);
   }

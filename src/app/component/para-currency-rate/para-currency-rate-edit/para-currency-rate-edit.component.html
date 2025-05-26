@@ -173,22 +173,22 @@
 
     <!-- Para Status -->
     <div class="col-md-6">
-      <label for="paraStatus" class="form-label">Para Status:</label>
-      <select id="paraStatus" name="paraStatus" [(ngModel)]="para.paraStatus" #paraStatus="ngModel" class="form-select"
+      <label for="activeStatus" class="form-label">Active Status:</label>
+      <select id="activeStatus" name="activeStatus" [(ngModel)]="para.activeStatus" #paraStatus="ngModel" class="form-select"
         required>
         <option Value='' disabled>-- Chọn trạng thái --</option>
         <option [ngValue]="0">0: Không hoạt động</option>
         <option [ngValue]="1">1: Đang hoạt động</option>
       </select>
-      <div *ngIf="paraStatus.invalid && (paraStatus.touched || submitted)" class="text-danger small mt-1">
+      <div *ngIf="activeStatus.invalid && (activeStatus.touched || submitted)" class="text-danger small mt-1">
         Vui lòng chọn trạng thái Para Status.
       </div>
     </div>
 
     <!-- Active Status -->
     <div class="col-md-6">
-      <label for="activeStatus" class="form-label">Active Status:</label>
-      <select id="activeStatus" name="activeStatus" [(ngModel)]="para.activeStatus" #activeStatus="ngModel"
+      <label for="paraStatus" class="form-label">Para Status:</label>
+      <select id="paraStatus" name="paraStatus" [(ngModel)]="para.paraStatus" #activeStatus="ngModel"
         class="form-select" required>
         <option Value='' disabled>-- Chọn trạng thái --</option>
         <option [value]="0">0: Mới</option>
@@ -197,7 +197,7 @@
         <option [value]="3">3: Từ chối</option>
         <option [value]="4">4: Xoá</option>
       </select>
-      <div *ngIf="activeStatus.invalid && (activeStatus.touched || submitted)" class="text-danger small mt-1">
+      <div *ngIf="paraStatus.invalid && (paraStatus.touched || submitted)" class="text-danger small mt-1">
         Vui lòng chọn trạng thái Active Status.
       </div>
     </div>
