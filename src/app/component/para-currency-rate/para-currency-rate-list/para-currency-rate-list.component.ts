@@ -4,14 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { NgxPaginationModule } from 'ngx-pagination';
+
 import Swal from 'sweetalert2';
+
 
 
 @Component({
   selector: 'app-para-currency-rate-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, PaginationModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, RouterModule, PaginationModule],
   templateUrl: './para-currency-rate-list.component.html',
   styleUrls: ['./para-currency-rate-list.component.css']
 })
@@ -52,7 +53,7 @@ export class ParaCurrencyRateListComponent implements OnInit {
   constructor(
     private service: ParaCurrencyRateService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit() {

@@ -26,3 +26,38 @@ form {
     padding: 24px 18px 12px 18px;
     margin-bottom: 24px;
 }
+/* Căn giữa cột hành động */
+.table tbody td:last-child {
+  text-align: center;
+  white-space: nowrap; /* không xuống dòng */
+}
+
+/* Khoảng cách giữa 2 nút */
+.table tbody td:last-child button {
+  margin-right: 8px;
+  min-width: 60px;
+  font-size: 0.85rem;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover cho nút sửa */
+.table tbody td:last-child button.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+}
+
+/* Hover cho nút xóa */
+.table tbody td:last-child button.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+/* Bo góc cho nút */
+.table tbody td:last-child button {
+  border-radius: 4px;
+}
+
+/* Nếu muốn, thêm hiệu ứng shadow nhẹ */
+.table tbody td:last-child button {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
+}
