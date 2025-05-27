@@ -7,8 +7,6 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 
-declare var bootstrap: any; // Khai báo biến bootstrap để sử dụng trong component
-
 @Component({
   selector: 'app-para-currency-rate-list',
   standalone: true,
@@ -18,7 +16,6 @@ declare var bootstrap: any; // Khai báo biến bootstrap để sử dụng tron
 })
 export class ParaCurrencyRateListComponent implements OnInit {
   list: any[] = [];
-  model: any = {};
   searchInput: any = {
     currency: '',
     currencyName: '',
@@ -43,37 +40,31 @@ export class ParaCurrencyRateListComponent implements OnInit {
   totalPages = 0;
   totalElements = 0;
   currentPage = 1;
+  pageSize = 5;
+  goToPageInput = 1;
+  isSearching = false;
   deleted = false;
   saved = false;
   edit = false;
-  pageSize = 5;
-  isSearching = false;
-  goToPageInput = 1;
-  selectedItem : any; // Biến để lưu item được chọn khi mở modal
-    
+  selectedItem: any;
 
   constructor(
     private service: ParaCurrencyRateService,
-    private route: ActivatedRoute,
+    // private route: ActivatedRoute,
     private router: Router,
-    
-    
   ) { }
-
 
   ngOnInit(): void {
     this.loadList();
   }
 
-  // load lại dannh sách
+  // Load danh sách
   loadList(page: number = 1, size: number = this.pageSize) {
-
     this.service.getAll({}).subscribe({
       next: data => {
-        this.list = data;          
-      
+        this.list = data;
         this.totalElements = this.list.length;
-        this.totalPages = Math.ceil(this.totalElements / this.pageSize);
+        this.totalPages = Math.ceil(this.totalElements / size);
         this.currentPage = page;
       },
       error: () => {
@@ -90,7 +81,27 @@ export class ParaCurrencyRateListComponent implements OnInit {
     });
   }
 
-  // Hàm gọi khi người dùng click chuyển trang
+  // Tìm kiếm động
+  search(page: number = 1, size: number = this.pageSize) {
+    this.isSearching = true;
+    const searchBody = {
+      search: this.searchInput,
+      page: page - 1,
+      size: size
+    };
+    this.service.findByNav(searchBody).subscribe({
+      next: data => {
+        this.list = data.content;
+        this.totalElements = this.list.length;
+        this.totalPages = Math.ceil(this.totalElements / size);
+        this.currentPage = page;
+        this.pageSize = size;
+      },
+      error: err => console.error('Lỗi tìm kiếm:', err),
+    });
+  }
+
+  // Khi chuyển trang
   pageChanged(event: any) {
     const selectedPage = event.page || event;
     if (this.isSearching) {
@@ -100,52 +111,39 @@ export class ParaCurrencyRateListComponent implements OnInit {
     }
   }
 
-
-
   // Khi thay đổi số bản ghi trên trang
   onSizeChange(event: Event) {
     const input = event.target as HTMLInputElement | null;
     const value = input?.value ? Number(input.value) : this.pageSize;
-
     if (value > 0) {
-      this.pageSize = value;       // Cập nhật lại giá trị pageSize
-
+      this.pageSize = value;
       if (this.isSearching) {
-        this.search(1, this.pageSize);  // Tìm kiếm lại từ trang đầu
+        this.search(1, this.pageSize);
       } else {
-        this.loadList(1, this.pageSize); // Load danh sách lại từ trang đầu
+        this.loadList(1, this.pageSize);
       }
     } else {
       Swal.fire('Thông báo', 'Số bản ghi mỗi trang phải lớn hơn 0', 'warning');
     }
   }
 
-
-  //khi nhảy trang
+  // Nhảy đến trang chỉ định
   goToPage() {
     if (!this.goToPageInput || this.goToPageInput < 1 || this.goToPageInput > this.totalPages) {
       Swal.fire('Thông báo', 'Số trang không hợp lệ', 'warning');
-      console.log('Số trang không hợp lệ:', this.goToPageInput);
       return;
     }
-
     const selectedPage = this.goToPageInput;
-
     if (this.isSearching) {
       this.search(selectedPage, this.pageSize);
-      console.log(this.search);
     } else {
       this.loadList(selectedPage, this.pageSize);
     }
   }
 
-
-
-
-  // xoá
+  // Xoá bản ghi
   delete(id?: number) {
     if (!id) return;
-
     Swal.fire({
       title: 'Bạn có chắc muốn xóa?',
       icon: 'warning',
@@ -165,7 +163,6 @@ export class ParaCurrencyRateListComponent implements OnInit {
               timer: 3000,
               timerProgressBar: true
             });
-
             this.loadList(this.currentPage, this.pageSize);
           },
           error: () => {
@@ -184,74 +181,25 @@ export class ParaCurrencyRateListComponent implements OnInit {
     });
   }
 
-
-  // chuyển trang khi thêm
+  // Chuyển trang thêm mới
   goToAdd() {
-    this.router.navigate(['/add'])
+    this.router.navigate(['/add']);
   }
 
-  // chuyển trang khi ấn sửa
+  // Chuyển trang sửa
   goToEdit(item: any) {
     this.router.navigate(['/edit'], {
       state: { data: item }
     });
   }
 
-  // hàm tìm kiếm động
-  search(page: number = 1, size: number = this.pageSize) {
-  
-
-    this.isSearching = true;
-
-    const searchBody = {
-      search: this.searchInput,
-      page: page - 1,
-      size: size
-    };
-
-    // gọi api tìm kiếm động
-    // this.service.findBySpec(searchBody).subscribe({
-    //   next: data => {
-    //     this.list = data.content;
-    //     this.totalPages = data.totalPages;
-    //     this.totalElements = data.totalElements;
-    //     this.currentPage = reqPage+1;
-    //     this.pageSize = reqSize;
-    //   },
-    //   error: err => console.error('Lỗi tìm kiếm:', err),
-    // });
-    this.service.findByNav(searchBody).subscribe({
-      next: data => {
-        this.list = data.content;
-        this.totalElements = this.list.length;
-        this.totalPages = Math.ceil(this.totalElements / this.pageSize);
-        this.currentPage = page;
-        this.pageSize = size;
-        
-      },
-  
-      error: err => console.error('Lỗi tìm kiếm:', err),
-    });
-    //  this.service.findByPro(searchBody).subscribe({
-    //   next: data => {
-    //     this.list = data.content;
-    //     this.totalPages = data.totalPages;
-    //     this.totalElements = data.totalElements;
-    //     this.currentPage = reqPage+1;
-    //     this.pageSize = reqSize;
-    //   },
-    //   error: err => console.error('Lỗi tìm kiếm:', err),
-    // });
-
-  }
+  // Xem chi tiết
  openDetail(item: any) {
-    this.selectedItem = item;
-    // Mở modal Bootstrap
-    const modalElement = document.getElementById('detailModal');
-    const modal = new bootstrap.Modal(modalElement);
-    modal.show();
-  }
-  // reset form
+  this.selectedItem = item;
+
+}
+
+  // Reset form tìm kiếm
   reset() {
     this.searchInput = {
       currency: '',
@@ -275,6 +223,5 @@ export class ParaCurrencyRateListComponent implements OnInit {
     };
     this.search(1, this.pageSize);
   }
-
-
+  
 }

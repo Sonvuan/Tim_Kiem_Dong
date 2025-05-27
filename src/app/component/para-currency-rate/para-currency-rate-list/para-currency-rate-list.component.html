@@ -210,10 +210,17 @@
                         item.activeStatus == 1 ? "Có hoạt động" :
                         "Không xác định" }}</td>
                     <td>{{ item.jsonData }}</td>
-                    <td>
-                        <button class="btn btn-info btn-sm" (click)="openDetail(item)">Xem chi tiết</button>
-                        <button class="btn btn-warning btn-sm me-2" (click)="goToEdit(item)">Sửa</button>
-                        <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Xóa</button>
+                    <td class="align-content-center">
+                        <button type="button" class="btn btn-link p-0 me-2" data-bs-toggle="modal"
+                            data-bs-target="#detailModal" (click)="selectedItem = item" title="Xem chi tiết">
+                            <i class="bi bi-eye text-info fs-5"></i>
+                        </button>
+                        <button class="btn btn-link p-0 me-2" (click)="goToEdit(item)" title="Sửa">
+                            <i class="bi bi-pencil-square text-warning fs-5"></i>
+                        </button>
+                        <button class="btn btn-link p-0" (click)="delete(item.id)" title="Xóa">
+                            <i class="bi bi-trash text-danger fs-5"></i>
+                        </button>
                     </td>
 
                 </tr>
