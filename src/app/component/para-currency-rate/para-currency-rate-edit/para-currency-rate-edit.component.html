@@ -80,9 +80,13 @@
       <label for="vndGlAccount" class="form-label">VND GL Account:</label>
       <input id="vndGlAccount" type="text" name="vndGlAccount" [(ngModel)]="para.vndGlAccount" #vndGlAccount="ngModel"
         required pattern="^[0-9]{1,9}$" maxlength="9" class="form-control" placeholder="Nhập VND GL Account" />
-      <div *ngIf="vndGlAccount.invalid && (vndGlAccount.touched || submitted)" class="text-danger small mt-1">
-        VND GL Account là bắt buộc và tối đa 9 chữ số.
+      <div *ngIf="submitted && vndGlAccount.errors?.['required']" class="text-danger small mt-1">
+        VND GL Account là bắt buộc.
       </div>
+      <div *ngIf="submitted && vndGlAccount.errors?.['pattern']" class="text-danger small mt-1">
+        VND GL Account phải là số và tối đa 9 chữ số.
+      </div>
+
     </div>
 
     <!-- FC GL Account -->
@@ -90,9 +94,13 @@
       <label for="fcGlAccount" class="form-label">FC GL Account:</label>
       <input id="fcGlAccount" type="text" name="fcGlAccount" [(ngModel)]="para.fcGlAccount" #fcAccount="ngModel"
         required pattern="^[0-9]{1,9}$" maxlength="9" class="form-control" placeholder="Nhập FC GL Account" />
-      <div *ngIf="fcAccount.invalid &&(fcAccount.touched||submitted)" class="text-danger small mt-1">
-        FC GL Account là bắt buộc và tối đa 9 chữ số.
+      <div *ngIf="submitted && fcAccount.errors?.['required']" class="text-danger small mt-1">
+        FC GL Account là bắt buộc.
       </div>
+      <div *ngIf="submitted && fcAccount.errors?.['pattern']" class="text-danger small mt-1">
+        FC GL Account phải là số và tối đa 9 chữ số.
+      </div>
+
     </div>
 
     <!-- Quốc gia -->
@@ -110,9 +118,13 @@
       <label for="buyingRate" class="form-label">Buying Rate:</label>
       <input id="buyingRate" type="text" name="buyingRate" [(ngModel)]="para.buyingRate" #buyingRate="ngModel"
         class="form-control" placeholder="Nhập Buying Rate" required pattern="^[0-9]{1,10}$" maxlength="10" />
-      <div *ngIf="buyingRate.invalid && (buyingRate.touched||submitted)" class="text-danger small mt-1">
-        Buying Rate là bắt buộc và tối đa 10 chữ số.
+      <div *ngIf="submitted && buyingRate.errors?.['required']" class="text-danger small mt-1">
+        Buying Rate là bắt buộc.
       </div>
+      <div *ngIf="submitted && buyingRate.errors?.['pattern']" class="text-danger small mt-1">
+        Buying Rate phải là số và tối đa 10 chữ số.
+      </div>
+
     </div>
 
     <!-- BR Cash High -->
@@ -120,8 +132,11 @@
       <label for="brCashHigh" class="form-label">BR Cash High:</label>
       <input id="brCashHigh" type="text" name="brCashHigh" [(ngModel)]="para.brCashHigh" #brCashHigh="ngModel"
         class="form-control" placeholder="Nhập BR Cash High" required pattern="^[0-9]{1,10}$" maxlength="10" />
-      <div *ngIf="brCashHigh.invalid && (brCashHigh.touched || submitted)" class="text-danger small mt-1">
-        BR Cash High là bắt buộc và tối đa 10 chữ số.
+      <div *ngIf="submitted && brCashHigh.errors?.['required']" class="text-danger small mt-1">
+        BR Cash High là bắt buộc.
+      </div>
+      <div *ngIf="submitted && brCashHigh.errors?.['pattern']" class="text-danger small mt-1">
+        BR Cash High phải là số và tối đa 10 chữ số.
       </div>
     </div>
 
@@ -130,8 +145,11 @@
       <label for="brCashLow" class="form-label">BR Cash Low:</label>
       <input id="brCashLow" type="text" name="brCashLow" [(ngModel)]="para.brCashLow" #brCashLow="ngModel"
         class="form-control" placeholder="Nhập BR Cash Low" required pattern="^[0-9]{1,10}$" maxlength="10" />
-      <div *ngIf="brCashLow.invalid && (brCashLow.touched || submitted)" class="text-danger small mt-1">
-        BR Cash Low là bắt buộc và tối đa 10 chữ số.
+      <div *ngIf="submitted && brCashLow.errors?.['required']" class="text-danger small mt-1">
+        BR Cash Low là bắt buộc.
+      </div>
+      <div *ngIf="submitted && brCashLow.errors?.['pattern']" class="text-danger small mt-1">
+        BR Cash Low phải là số và tối đa 10 chữ số.
       </div>
     </div>
 
@@ -140,10 +158,16 @@
       <label for="sellingRate" class="form-label">Selling Rate:</label>
       <input id="sellingRate" type="text" name="sellingRate" [(ngModel)]="para.sellingRate" #sellingRate="ngModel"
         class="form-control" placeholder="Nhập Selling Rate" required pattern="^[0-9]{1,10}$" maxlength="10" />
-      <div *ngIf="sellingRate.invalid && (sellingRate.touched || submitted)" class="text-danger small mt-1">
-        Selling Rate là bắt buộc và tối đa 10 chữ số.
+
+      <div *ngIf="submitted && sellingRate.errors?.['required']" class="text-danger small mt-1">
+        Selling Rate là bắt buộc.
+      </div>
+
+      <div *ngIf="submitted && sellingRate.errors?.['pattern']" class="text-danger small mt-1">
+        Selling Rate phải là một số và tối đa 10 chữ số.
       </div>
     </div>
+
 
     <!-- Intermediate Rate -->
     <div class="col-md-6">
@@ -151,8 +175,12 @@
       <input id="intermediateRate" type="text" name="intermediateRate" [(ngModel)]="para.intermediateRate"
         #intermediateRate="ngModel" class="form-control" placeholder="Nhập Intermediate Rate" required
         pattern="^[0-9]{1,10}$" maxlength="10" />
-      <div *ngIf="intermediateRate.invalid && (intermediateRate.touched || submitted)" class="text-danger small mt-1">
-        Intermediate Rate là bắt buộc và tối đa 10 chữ số.
+      <div *ngIf="submitted && intermediateRate.errors?.['required']" class="text-danger small mt-1">
+        Intermediate Rate là bắt buộc.
+      </div>
+
+      <div *ngIf="submitted && intermediateRate.errors?.['pattern']" class="text-danger small mt-1">
+        Intermediate Rate phải là một số và tối đa 10 chữ số.
       </div>
     </div>
 
@@ -174,8 +202,8 @@
     <!-- Para Status -->
     <div class="col-md-6">
       <label for="activeStatus" class="form-label">Active Status:</label>
-      <select id="activeStatus" name="activeStatus" [(ngModel)]="para.activeStatus" #paraStatus="ngModel" class="form-select"
-        required>
+      <select id="activeStatus" name="activeStatus" [(ngModel)]="para.activeStatus" #paraStatus="ngModel"
+        class="form-select" required>
         <option Value='' disabled>-- Chọn trạng thái --</option>
         <option [ngValue]="0">0: Không hoạt động</option>
         <option [ngValue]="1">1: Đang hoạt động</option>
@@ -211,7 +239,7 @@
 
     <!-- Buttons -->
     <div class="mt-4">
-      <button type="submit" class="btn btn-primary me-2" >
+      <button type="submit" class="btn btn-primary me-2">
         Lưu
       </button>
       <button type="button" class="btn btn-secondary" (click)="backForm()">Hủy</button>

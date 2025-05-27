@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ParaCurrencyRateService } from '../../services/para-currency-rate.service';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-para-currency-rate-create',
@@ -53,12 +54,28 @@ export class ParaCurrencyRateCreateComponent implements OnInit {
     }
     this.paraService.create(this.para).subscribe({
       next: () => {
-        this.toastr.success('Tạo mới tỷ giá thành công!', 'Thông báo');
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+
+          title: 'Thêm mới thành công!',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true
+        });
         this.router.navigate(['']);
       },
-      error: err => {
-        console.error('Lỗi lưu dữ liệu:', err);
-        this.errorMsg = 'Lỗi lưu dữ liệu. Vui lòng thử lại.';
+      error: () => {
+          Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Lỗi khi thêm mới dữ liệu!',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true
+        });
       }
     });
   }

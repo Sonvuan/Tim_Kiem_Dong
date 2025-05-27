@@ -143,26 +143,20 @@
             <button class="btn btn-primary me-2 px-4" type="submit">Tìm kiếm</button>
             <button class="btn btn-secondary px-4" type="button" (click)="reset()">Reset</button>
         </div>
-        <!-- 
-        <div class="col-md-2">
-            <label for="size" class="form-label">Số bản ghi</label>
-            <input type="number" class="form-control" [(ngModel)]="searchInput.size" name="size" id="size"
-                placeholder="Số bản ghi" min="1" (change)="onSizeChange($event)" />
-        </div> -->
-
     </form>
 
     <div class="mb-3 d-flex justify-content-end">
         <!-- <a [routerLink]="['/add']">
             <button  class="btn btn-success" (click)="goToAdd()">Thêm mới</button>
         </a> -->
-        <button  class="btn btn-success" (click)="goToAdd()">Thêm mới</button>
+        <button class="btn btn-success" (click)="goToAdd()">Thêm mới</button>
     </div>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover">
             <thead class="table-dark text-center">
                 <tr>
+                    <th>STT</th>
                     <th>ID</th>
                     <th>Mã</th>
                     <th>Tên</th>
@@ -186,7 +180,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of list ">
+                <tr *ngFor="let item of list | paginate: { itemsPerPage: pageSize, currentPage: currentPage }; let i = index"
+                    class="text-center">
+                    <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                     <td>{{ item.id }}</td>
                     <td>{{ item.currency }}</td>
                     <td>{{ item.currencyName }}</td>
@@ -215,9 +211,11 @@
                         "Không xác định" }}</td>
                     <td>{{ item.jsonData }}</td>
                     <td>
+                        <button class="btn btn-info btn-sm" (click)="openDetail(item)">Xem chi tiết</button>
                         <button class="btn btn-warning btn-sm me-2" (click)="goToEdit(item)">Sửa</button>
                         <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Xóa</button>
                     </td>
+
                 </tr>
             </tbody>
         </table>
@@ -240,43 +238,121 @@
 
 
         </div>
-        <pagination class="align-items-center d-flex justify-content-center" [totalItems]="totalElements"
+        <!-- <pagination class="align-items-center d-flex justify-content-center" [totalItems]="totalElements"
             [(ngModel)]="currentPage" [itemsPerPage]="pageSize" (pageChanged)="pageChanged($event)" [maxSize]="5"
             [boundaryLinks]="true" previousText="Trước" nextText="Sau" firstText="Đầu" lastText="Cuối">
-        </pagination>
-    </div>
-    <!-- Toast thông báo lưu thành công -->
-    <!-- <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
-        <div class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive"
-            aria-atomic="true" *ngIf="saved">
-            <div class="d-flex">
-                <div class="toast-body">
-                    Dữ liệu đã được lưu thành công!
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"
-                    (click)="saved = false"></button>
-            </div>
-        </div>
+        </pagination> -->
+        <pagination-controls (pageChange)="currentPage = $event" [responsive]="true" previousLabel="Trước"
+            nextLabel="Sau" [directionLinks]="true" [autoHide]="true" class="d-flex justify-content-center mt-3">
+        </pagination-controls>
 
-        <div class="toast align-items-center text-white bg-success border-0 show mt-2" role="alert"
-            aria-live="assertive" aria-atomic="true" *ngIf="deleted">
-            <div class="d-flex">
-                <div class="toast-body">
-                    Dữ liệu đã được xóa thành công!
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"
-                    (click)="deleted = false"></button>
+    </div>
+
+</div>
+<!-- Modal xem chi tiết -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow-sm border-0 rounded-4">
+            <div class="modal-header bg-primary text-white rounded-top-4">
+                <h5 class="modal-title" id="detailModalLabel"><i class="bi bi-currency-exchange me-2"></i>Chi tiết tỷ
+                    giá</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <tbody>
+                        <tr>
+                            <th class="text-end w-25">ID</th>
+                            <td>{{selectedItem?.id}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Mã tiền tệ</th>
+                            <td>{{selectedItem?.currency}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Tên tiền tệ</th>
+                            <td>{{selectedItem?.currencyName}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Ngày nghỉ</th>
+                            <td>{{selectedItem?.currencyHoliday}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">FC Purchase</th>
+                            <td>{{selectedItem?.fcPurchase}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">FC Sale</th>
+                            <td>{{selectedItem?.fcSale}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Cash Transaction</th>
+                            <td>{{selectedItem?.cashTransaction}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Currency Exchange</th>
+                            <td>{{selectedItem?.currencyExchange}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">VND GL Account</th>
+                            <td>{{selectedItem?.vndGlAccount}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">FC GL Account</th>
+                            <td>{{selectedItem?.fcGlAccount}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Quốc gia</th>
+                            <td>{{selectedItem?.country}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Buying Rate</th>
+                            <td>{{selectedItem?.buyingRate}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">BR Cash High</th>
+                            <td>{{selectedItem?.brCashHigh}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">BR Cash Low</th>
+                            <td>{{selectedItem?.brCashLow}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Selling Rate</th>
+                            <td>{{selectedItem?.sellingRate}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Intermediate Rate</th>
+                            <td>{{selectedItem?.intermediateRate}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Para Status</th>
+                            <td>{{ selectedItem?.paraStatus ==0 ? "Mới" :
+                                selectedItem?.paraStatus ==1 ? "Chờ" :
+                                selectedItem?.paraStatus ==2 ? "Đã phê duyệt" :
+                                selectedItem?.paraStatus ==3 ? "Từ chối" :
+                                selectedItem?.paraStatus ==4 ? "Xoá":
+                                "Không xác định"
+                                }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end">Active Status</th>
+                            <td>{{selectedItem?.activeStatus == 1 ? 'Đang hoạt động' : 'Không hoạt động'}}</td>
+
+                        </tr>
+                        <tr>
+                            <th class="text-end">JSON Data</th>
+                            <td>
+                                <pre class="mb-0 small">{{selectedItem?.jsonData}}</pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer bg-white border-0">
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
-        <div class="toast align-items-center text-white bg-success border-0 show mt-2" role="alert"
-            aria-live="assertive" aria-atomic="true" *ngIf="edit">
-            <div class="d-flex">
-                <div class="toast-body">
-                    Dữ liệu đã được sửa thành công!
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"
-                    (click)="edit = false"></button>
-            </div>
-        </div>
-    </div> -->
-    
+    </div>
+</div>

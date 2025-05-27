@@ -11,6 +11,7 @@ export class ParaCurrencyRateService {
 
   getAll(data:any):Observable<any>{
     return this.http.post(`${API_URL}/getAll`,data);
+    
   }
 
   list(searchInput: any): Observable<any> {
