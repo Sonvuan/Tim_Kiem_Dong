@@ -35,6 +35,7 @@ export class ParaCurrencyRateCreateComponent implements OnInit {
     jsonData: ''
   };
 
+  countryList: any[] = [];
   saved = false;
   errorMsg = '';
   submitted = false;
@@ -42,15 +43,38 @@ export class ParaCurrencyRateCreateComponent implements OnInit {
   constructor(
     private paraService: ParaCurrencyRateService,
     private router: Router,
-    private toastr: ToastrService
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.getAll();
+  }
+
+
+  getAll() {
+    const list = {};
+    this.paraService.getAll(list).subscribe({
+      next: data => {
+        console.log(data);
+        this.countryList = data;
+      },
+      error: () => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Load danh sách thất bại!',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true
+        });
+      }
+    });
+  }
 
   onSubmit(paraform: NgForm) {
     this.submitted = true;
     if (paraform.invalid) {
-      return; // Không gọi API khi form chưa hợp lệ
+      return;
     }
     this.paraService.create(this.para).subscribe({
       next: () => {
@@ -67,7 +91,7 @@ export class ParaCurrencyRateCreateComponent implements OnInit {
         this.router.navigate(['']);
       },
       error: () => {
-          Swal.fire({
+        Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'error',
@@ -80,31 +104,6 @@ export class ParaCurrencyRateCreateComponent implements OnInit {
     });
   }
 
-
-  // resetForm() {
-  //   this.para = {
-  //       currency: '',
-  //   currencyName: '',
-  //   currencyHoliday: '',
-  //   fcPurchase: '',
-  //   fcSale: '',
-  //   cashTransaction: '',
-  //   currencyExchange: '',
-  //   vndGlAccount: '',
-  //   fcGlAccount: '',
-  //   country: '',
-  //   buyingRate: '',
-  //   brCashHigh: '',
-  //   brCashLow: '',
-  //   sellingRate: '',
-  //   intermediateRate: '',
-  //   paraStatus: '',
-  //   activeStatus: '',
-  //   jsonData: ''
-  //   };
-  //   this.saved = false;
-  //   this.errorMsg = '';
-  // }
   backForm() {
     this.router.navigate(['']);
   }

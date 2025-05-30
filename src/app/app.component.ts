@@ -1,14 +1,24 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet, Router } from '@angular/router';
 import { HeaderComponent } from './component/layout/header/header.component';
 import { FooterComponent } from './component/layout/footer/footer.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,HeaderComponent,FooterComponent],
+  imports: [RouterOutlet,HeaderComponent,FooterComponent,CommonModule,RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
+
 export class AppComponent {
-  title = 'Tim_kiem_dong1';
+  isAdminLoggedIn = false;
+  loginTemplate=true;
+
+  constructor(private router: Router) {}
+
+    goToLogin() {
+    this.router.navigate(['/login']);
+  }
 }

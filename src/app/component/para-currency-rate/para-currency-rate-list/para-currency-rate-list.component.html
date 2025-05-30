@@ -67,10 +67,19 @@
                 id="fcGlAccount" placeholder="FC GL Account" />
         </div>
 
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
             <label for="country" class="form-label">Quốc gia</label>
             <input type="text" class="form-control" [(ngModel)]="searchInput.country" name="country" id="country"
                 placeholder="Quốc gia" />
+        </div> -->
+        <div class="col-md-3">
+             <label for="country" class="form-label">Quốc gia</label>
+            <select class="form-control" [(ngModel)]="searchInput.country" name="lopId">
+                <option [value]="''">-- Chọn Quốc Gia --</option>
+                <option *ngFor="let maItem of countryList" [value]="maItem.name">
+                    {{ maItem.ma }} - {{ maItem.name }}
+                </option>
+            </select>
         </div>
 
         <div class="col-md-3">
@@ -138,11 +147,19 @@
             <input type="text" class="form-control" [(ngModel)]="searchInput.jsonData" name="jsonData" id="jsonData"
                 placeholder="JSON Data" />
         </div>
+        <div class="col-md-3">
+            <label for="sort" class="form-label">Sắp xếp</label>
+            <select class="form-select" [(ngModel)]="searchInput.sort" name="sort" id="sort">
+                <option value="desc">Mới Nhất</option>
+                <option value="asc">Cũ Nhất</option>
+            </select>
+        </div>
 
-        <div class="col-md-3 d-flex align-items-end">
+        <div class="col-md-3 d-flex ">
             <button class="btn btn-primary me-2 px-4" type="submit">Tìm kiếm</button>
             <button class="btn btn-secondary px-4" type="button" (click)="reset()">Reset</button>
         </div>
+
     </form>
 
     <div class="mb-3 d-flex justify-content-end">
@@ -180,13 +197,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of list | paginate: { itemsPerPage: pageSize, currentPage: currentPage }; let i = index"
+                <tr *ngFor="let item of list | paginate: { itemsPerPage: pageSize, currentPage: currentPage , totalItems:totalElements  }; let i = index"
                     class="text-center">
                     <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                     <td>{{ item.id }}</td>
                     <td>{{ item.currency }}</td>
                     <td>{{ item.currencyName }}</td>
-                    <td>{{ item.currencyHoliday }}</td>
+                    <td>{{ item.currencyHoliday | date: 'dd/MM/yyyy' }}</td>
                     <td>{{ item.fcPurchase }}</td>
                     <td>{{ item.fcSale }}</td>
                     <td>{{ item.cashTransaction }}</td>
@@ -249,8 +266,8 @@
             [(ngModel)]="currentPage" [itemsPerPage]="pageSize" (pageChanged)="pageChanged($event)" [maxSize]="5"
             [boundaryLinks]="true" previousText="Trước" nextText="Sau" firstText="Đầu" lastText="Cuối">
         </pagination> -->
-        <pagination-controls (pageChange)="currentPage = $event" [responsive]="true" previousLabel="Trước"
-            nextLabel="Sau" [directionLinks]="true" [autoHide]="true" class="d-flex justify-content-center mt-3">
+        <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Trước"
+            nextLabel="Sau" [directionLinks]="true" class="d-flex justify-content-center mt-3">
         </pagination-controls>
 
     </div>

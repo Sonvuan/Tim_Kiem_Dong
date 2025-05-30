@@ -18,6 +18,7 @@ export class ParaCurrencyRateEditComponent implements OnInit {
   para: any = {};
   errorMsg = '';
   submitted = false;
+  countryList: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private paraService: ParaCurrencyRateService,
@@ -25,6 +26,12 @@ export class ParaCurrencyRateEditComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.load();
+    this.getAll();
+  }
+
+
+  load() {
     const stateData = history.state?.data;
 
     if (!stateData || !stateData.id) {
@@ -35,20 +42,32 @@ export class ParaCurrencyRateEditComponent implements OnInit {
     this.id = stateData.id;
   }
 
-
-
-
-  // loadData(): void {
-  //   this.paraService.findById(this.id).subscribe(data => {
-  //     this.para = data;
-  //   });
-  // }
-
+  getAll() {
+    const list = {};
+    this.paraService.getAll(list).subscribe({
+      next: (data) => {
+       this.countryList = data;
+  
+      },
+      error: (error) => {
+        console.error('Error fetching data', error);
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Lỗi khi tải dữ liệu!',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true
+        });
+      }
+    });
+  }
 
   onSubmit(paraForm: NgForm) {
     this.submitted = true;
     if (paraForm.invalid) return;
-    this.paraService.update(this.id, this.para).subscribe({
+    this.paraService.update(this.para).subscribe({
       next: () => {
         Swal.fire({
           toast: true,

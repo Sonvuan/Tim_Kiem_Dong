@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+import { error } from 'console';
 
 @Component({
   selector: 'app-para-currency-rate-list',
@@ -16,6 +17,7 @@ import Swal from 'sweetalert2';
 })
 export class ParaCurrencyRateListComponent implements OnInit {
   list: any[] = [];
+
   searchInput: any = {
     currency: '',
     currencyName: '',
@@ -34,12 +36,15 @@ export class ParaCurrencyRateListComponent implements OnInit {
     intermediateRate: '',
     paraStatus: '',
     activeStatus: '',
-    jsonData: ''
+    jsonData: '',
+    sort: 'desc'
   };
 
+
+  countryList: any[] = [];
   totalPages = 0;
   totalElements = 0;
-  currentPage = 1;
+  currentPage = 0;
   pageSize = 5;
   goToPageInput = 1;
   isSearching = false;
@@ -47,25 +52,38 @@ export class ParaCurrencyRateListComponent implements OnInit {
   saved = false;
   edit = false;
   selectedItem: any;
+  sort = '';
 
   constructor(
     private service: ParaCurrencyRateService,
-    // private route: ActivatedRoute,
     private router: Router,
   ) { }
 
   ngOnInit(): void {
     this.loadList();
+    // this.search();
+    this.getCountry();
+
   }
 
-  // Load danh sách
+
+
+
   loadList(page: number = 1, size: number = this.pageSize) {
-    this.service.getAll({}).subscribe({
+    const searchBody = {
+      page: page - 1,
+      size: size
+
+    };
+
+    this.service.list(searchBody).subscribe({
       next: data => {
-        this.list = data;
-        this.totalElements = this.list.length;
-        this.totalPages = Math.ceil(this.totalElements / size);
+
+        this.list = data.content;
+        this.totalElements = data.totalElements;
+        this.totalPages = data.totalPages;
         this.currentPage = page;
+        this.pageSize = size;
       },
       error: () => {
         Swal.fire({
@@ -79,6 +97,29 @@ export class ParaCurrencyRateListComponent implements OnInit {
         });
       }
     });
+
+  }
+
+
+  getCountry() {
+    const list = {};
+    this.service.getAll(list).subscribe({
+      next: data => {
+        this.countryList = data;
+      },
+      error: () => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Load danh sách thất bại!',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true
+        });
+      }
+    });
+
   }
 
   // Tìm kiếm động
@@ -86,19 +127,46 @@ export class ParaCurrencyRateListComponent implements OnInit {
     this.isSearching = true;
     const searchBody = {
       search: this.searchInput,
+      sortDirection: this.searchInput.sort || 'DESC',
       page: page - 1,
       size: size
     };
     this.service.findByNav(searchBody).subscribe({
       next: data => {
+        console.log("fdsf", data);
+
         this.list = data.content;
-        this.totalElements = this.list.length;
-        this.totalPages = Math.ceil(this.totalElements / size);
+        this.totalElements = data.totalElements;
+        this.totalPages = data.totalPages;
         this.currentPage = page;
         this.pageSize = size;
+
+
       },
       error: err => console.error('Lỗi tìm kiếm:', err),
     });
+    // this.service.findByPro(searchBody).subscribe({
+    //   next: data => {
+    //     this.list = data.content;
+    //     this.totalElements = data.totalElements;
+    //     this.totalPages = data.totalPages;
+    //     this.currentPage = page;
+    //     this.pageSize = size;
+
+    //   },
+    //   error: err => console.error('Lỗi tìm kiếm:', err),
+    // });
+    // this.service.findBySpec(searchBody).subscribe({
+    //   next: data => {
+    //     this.list = data.content;
+    //     this.totalElements = data.totalElements;
+    //     this.totalPages = data.totalPages;
+    //     this.currentPage = page;
+    //     this.pageSize = size;
+
+    //   },
+    //   error: err => console.error('Lỗi tìm kiếm:', err),
+    // });
   }
 
   // Khi chuyển trang
@@ -194,10 +262,10 @@ export class ParaCurrencyRateListComponent implements OnInit {
   }
 
   // Xem chi tiết
- openDetail(item: any) {
-  this.selectedItem = item;
+  openDetail(item: any) {
+    this.selectedItem = item;
 
-}
+  }
 
   // Reset form tìm kiếm
   reset() {
@@ -219,9 +287,10 @@ export class ParaCurrencyRateListComponent implements OnInit {
       intermediateRate: '',
       paraStatus: '',
       activeStatus: '',
-      jsonData: ''
+      jsonData: '',
+      sort: 'desc'
     };
     this.search(1, this.pageSize);
   }
-  
+
 }

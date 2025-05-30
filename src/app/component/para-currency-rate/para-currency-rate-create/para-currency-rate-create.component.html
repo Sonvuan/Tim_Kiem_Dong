@@ -104,12 +104,26 @@
     </div>
 
     <!-- Quốc gia -->
-    <div class="col-md-6">
+    <!-- <div class="col-md-6">
       <label for="country" class="form-label">Quốc gia:</label>
       <input id="country" type="text" name="country" [(ngModel)]="para.country" #country="ngModel" required
         maxlength="50" class="form-control" placeholder="Nhập quốc gia" />
       <div *ngIf="country.invalid && (country.touched || submitted)" class="text-danger small mt-1">
         Quốc gia là bắt buộc và tối đa 50 ký tự.
+      </div>
+    </div> -->
+
+
+    <div class="col-md-6">
+      <label for="country" class="form-label">Quốc gia:</label>
+      <select class="form-control" [(ngModel)]="para.country" name="country" #country="ngModel" required>
+        <option [value]="''" disabled>-- Chọn Quốc GIa --</option>
+        <option *ngFor="let maItem of countryList" [value]="maItem.name">
+          {{ maItem.ma }} - {{ maItem.name }}
+        </option>
+      </select>
+      <div *ngIf="country.invalid && (country.touched || submitted)" class="text-danger small mt-1">
+        Quốc gia là bắt buộc.
       </div>
     </div>
 
