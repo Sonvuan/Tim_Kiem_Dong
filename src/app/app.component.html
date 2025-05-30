@@ -1,15 +1,7 @@
 <app-header class="header"></app-header>
-
-<main class="main" *ngIf="isAdminLoggedIn; else loginTemplate">
+<main class="main" >
   <router-outlet></router-outlet>
 </main>
-
 <app-footer></app-footer>
 
-<ng-template #loginTemplate>
-  <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
-    <p class="text-center">Bạn chưa đăng nhập hoặc không có quyền truy cập. Vui lòng đăng nhập!</p>
-    <!-- Bạn có thể thêm nút điều hướng đến trang login -->
-    <button class="btn btn-primary" (click)="goToLogin()">Đăng nhập</button>
-  </div>
-</ng-template>
+

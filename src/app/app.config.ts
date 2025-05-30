@@ -14,11 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()) ,
     provideAnimations(),
-     provideToastr({
-      timeOut: 3000,
-      positionClass: 'toast-top-right',
-      preventDuplicates: true,
-    }),
 
   ],
   

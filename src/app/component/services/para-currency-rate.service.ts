@@ -8,29 +8,29 @@ const API_URL1 = 'http://localhost:8080/Country';
 @Injectable({ providedIn: 'root' })
 export class ParaCurrencyRateService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getAll(data: any):Observable<any>{
-    return this.http.post(`${API_URL1}/getAll`, data);
-    
+  getAll(data: any): Observable<any> {
+    return this.http.post(`${API_URL1}/getAll`, data,{ withCredentials: true });
+
   }
 
   list(searchInput: any): Observable<any> {
-    return this.http.post(`${API_URL}/list`, searchInput);
+    return this.http.post(`${API_URL}/list`, searchInput,{ withCredentials: true });
   }
 
 
 
   create(data: any): Observable<any> {
-    return this.http.post(`${API_URL}/Create`, data);
+    return this.http.post(`${API_URL}/Create`, data,{ withCredentials: true });
   }
 
   // update(id: number, data: any): Observable<any> {
   //   return this.http.post(`${API_URL}/Update?id=${id}`, data);
   // }
   update(data: any): Observable<any> {
-  return this.http.post(`${API_URL}/Update`, data);
-}
+    return this.http.post(`${API_URL}/Update`, data,{ withCredentials: true });
+  }
 
 
   // delete(id: number): Observable<any> {
@@ -38,19 +38,19 @@ export class ParaCurrencyRateService {
   // }
 
 
- delete(id: number): Observable<any> {
-  return this.http.post(`${API_URL}/delete`, { id }, { responseType: 'text' });
-}
+  delete(id: number): Observable<any> {
+    return this.http.post(`${API_URL}/delete`, { id }, { responseType: 'text',withCredentials: true });
+  }
 
   findBySpec(searchInput: any): Observable<any> {
-    return this.http.post(`${API_URL}/findBySpec`, searchInput);
+    return this.http.post(`${API_URL}/findBySpec`, searchInput,{ withCredentials: true });
   }
 
   findByNav(searchInput: any): Observable<any> {
-    return this.http.post(`${API_URL}/findByNav`, searchInput);
+    return this.http.post(`${API_URL}/findByNav`, searchInput,{ withCredentials: true });
   }
 
   findByPro(searchInput: any): Observable<any> {
-    return this.http.post(`${API_URL}/findByPro`, searchInput);
+    return this.http.post(`${API_URL}/findByPro`, searchInput,{ withCredentials: true });
   }
 }
