@@ -40,7 +40,7 @@ export class LoginComponent {
               timer: 3000,
               timerProgressBar: true
             });
-          this.router.navigate(['']);
+          this.router.navigate(['/admin/list']);
         } else {
           Swal.fire('Lỗi', 'Đăng nhập không thành công', 'error');
         }

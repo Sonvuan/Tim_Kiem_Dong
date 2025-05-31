@@ -2,7 +2,7 @@ import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ParaCurrencyRateService } from '../../services/para-currency-rate.service';
+import { ParaCurrencyRateService } from '../../../services/para-currency-rate.service';
 
 import Swal from 'sweetalert2';
 

@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { ParaCurrencyRateService } from '../../services/para-currency-rate.service';
+;
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+import { ParaCurrencyRateService } from '../../../services/para-currency-rate.service';
 
 @Component({
   selector: 'app-para-currency-rate-create',
