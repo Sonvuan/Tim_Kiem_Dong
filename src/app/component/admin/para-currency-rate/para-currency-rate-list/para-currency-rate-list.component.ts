@@ -63,7 +63,7 @@ export class ParaCurrencyRateListComponent implements OnInit {
     this.loadList();
     // this.search();
     this.getCountry();
-
+    // this.search(1, this.pageSize); 
   }
 
 
@@ -85,18 +85,19 @@ export class ParaCurrencyRateListComponent implements OnInit {
         this.currentPage = page;
         this.pageSize = size;
       },
-      error: () => {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'error',
-          title: 'Load danh sách thất bại!',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true
-        });
-      }
+      // error: () => {
+      //   Swal.fire({
+      //     toast: true,
+      //     position: 'top-end',
+      //     icon: 'error',
+      //     title: 'Load danh sách thất bại!',
+      //     showConfirmButton: false,
+      //     timer: 3000,
+      //     timerProgressBar: true
+      //   });
+      // }
     });
+    
 
   }
 
@@ -107,17 +108,17 @@ export class ParaCurrencyRateListComponent implements OnInit {
       next: data => {
         this.countryList = data;
       },
-      error: () => {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'error',
-          title: 'Load danh sách thất bại!',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true
-        });
-      }
+      // error: () => {
+      //   Swal.fire({
+      //     toast: true,
+      //     position: 'top-end',
+      //     icon: 'error',
+      //     title: 'Load danh sách thất bại!',
+      //     showConfirmButton: false,
+      //     timer: 3000,
+      //     timerProgressBar: true
+      //   });
+      // }
     });
 
   }
@@ -251,12 +252,12 @@ export class ParaCurrencyRateListComponent implements OnInit {
 
   // Chuyển trang thêm mới
   goToAdd() {
-    this.router.navigate(['/add']);
+    this.router.navigate(['/admin/create']);
   }
 
   // Chuyển trang sửa
   goToEdit(item: any) {
-    this.router.navigate(['/edit'], {
+    this.router.navigate(['/admin/edit'], {
       state: { data: item }
     });
   }

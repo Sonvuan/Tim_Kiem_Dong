@@ -14,12 +14,7 @@ import { AuthComponent } from './component/auth/auth.component';
 
 
 export class AppComponent {
-  isAdminLoggedIn = false;
-  loginTemplate=true;
 
-  constructor(private router: Router) {}
 
-    goToLogin() {
-    this.router.navigate(['/login']);
-  }
+
 }

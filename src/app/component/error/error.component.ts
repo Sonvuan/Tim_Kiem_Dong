@@ -4,16 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-auth',
+  selector: 'app-error',
   standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './auth.component.html',
-  styleUrl: './auth.component.css'
+   imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './error.component.html',
+  styleUrl: './error.component.css'
 })
-
-
-export class AuthComponent {
-
-  
+export class ErrorComponent {
 
 }

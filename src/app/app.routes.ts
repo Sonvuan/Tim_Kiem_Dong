@@ -7,6 +7,8 @@ import { ParaCurrencyRateListComponent } from './component/admin/para-currency-r
 import { ParaCurrencyRateCreateComponent } from './component/admin/para-currency-rate/para-currency-rate-create/para-currency-rate-create.component';
 import { ParaCurrencyRateEditComponent } from './component/admin/para-currency-rate/para-currency-rate-edit/para-currency-rate-edit.component';
 import { AdminComponent } from './component/admin/admin.component';
+import { HomeComponent } from './component/home/home.component';
+import { ErrorComponent } from './component/error/error.component';
 
 export const routes: Routes = [
     {
@@ -27,25 +29,14 @@ export const routes: Routes = [
       {path: 'edit', component: ParaCurrencyRateEditComponent},
     ]
   },
+   {path:'home',component:HomeComponent},
 
-  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+ { path: '403', component: ErrorComponent },
+  { path: '**', redirectTo: 'home' },
 
  
-  { path: '**', redirectTo: 'auth/login' }
-  
-
-    // {
-    //     path: 'a',
-    //     component: ParaCurrencyRateListComponent
-    // },
-    // {
-    //     path: 'add',
-    //     component: ParaCurrencyRateCreateComponent
-    // },
-    // {
-    //     path: 'edit',
-    //     component: ParaCurrencyRateEditComponent
-    // }
 
 
 ];

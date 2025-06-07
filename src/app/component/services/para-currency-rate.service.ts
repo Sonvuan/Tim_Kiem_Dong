@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:8080/Currency';
+const API_URL = 'http://localhost:8080/admin';
 const API_URL1 = 'http://localhost:8080/Country';
 
 @Injectable({ providedIn: 'root' })

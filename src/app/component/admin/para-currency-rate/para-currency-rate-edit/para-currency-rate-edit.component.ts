@@ -20,7 +20,6 @@ export class ParaCurrencyRateEditComponent implements OnInit {
   submitted = false;
   countryList: any[] = [];
   constructor(
-    private route: ActivatedRoute,
     private paraService: ParaCurrencyRateService,
     private router: Router,
   ) { }
@@ -35,7 +34,7 @@ export class ParaCurrencyRateEditComponent implements OnInit {
     const stateData = history.state?.data;
 
     if (!stateData || !stateData.id) {
-      this.router.navigate(['']);
+      this.router.navigate(['/admin/list']);
       return;
     }
     this.para = stateData;
@@ -78,7 +77,7 @@ export class ParaCurrencyRateEditComponent implements OnInit {
           timer: 3000,
           timerProgressBar: true
         });
-        this.router.navigate(['']);
+        this.router.navigate(['/admin/list']);
       },
       error: () => {
         Swal.fire({
@@ -95,7 +94,7 @@ export class ParaCurrencyRateEditComponent implements OnInit {
   }
 
   backForm(): void {
-    this.router.navigate(['']);
+    this.router.navigate(['/admin/list']);
   }
 
 } 
