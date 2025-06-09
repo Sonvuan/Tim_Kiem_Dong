@@ -15,13 +15,16 @@ declare var bootstrap: any; // nếu bootstrap không có type, tạm khai báo 
   styleUrls: ['./home.component.css']
 })
 
-export class HomeComponent implements OnInit  {
+export class HomeComponent implements OnInit {
 
-name: string ='';
- constructor(private authService: AuthService, private router: Router) { }
-ngOnInit(): void {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    const userStr = localStorage.getItem('user');
+  name: string = '';
+  constructor(private authService: AuthService, private router: Router) { }
+  ngOnInit(): void {
+    this.load();
+  }
+
+  load(){
+   const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
@@ -31,7 +34,7 @@ ngOnInit(): void {
       }
     }
   }
-}
+
 logout() {
     Swal.fire({
       title: 'Đăng xuất?',
@@ -52,6 +55,8 @@ logout() {
         });
       }
     });
-
+    localStorage.removeItem('user');
   }
+  
+
 }

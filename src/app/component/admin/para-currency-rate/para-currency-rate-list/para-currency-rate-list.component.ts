@@ -11,7 +11,9 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-para-currency-rate-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule , NgxPaginationModule],
+
+  imports: [CommonModule, FormsModule, RouterModule, NgxPaginationModule],
+
   templateUrl: './para-currency-rate-list.component.html',
   styleUrls: ['./para-currency-rate-list.component.css']
 })
