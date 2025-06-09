@@ -5,21 +5,26 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.services';
 import Swal from 'sweetalert2';
 
+
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
+
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']  // để styleUrls là mảng
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  role: string = ''; 
+  role: string = '';
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+
+
   ) { }
 
   // submit() {
@@ -80,50 +85,50 @@ export class LoginComponent {
 
   // }
   submit() {
-  const userData = {
-    email: this.email,
-    password: this.password,
-    role:this.role,
-  };
+    const userData = {
+      email: this.email,
+      password: this.password,
+      role: this.role,
+    };
 
-  this.authService.login(userData).subscribe({
-    next: (response) => {
-      console.log('Login response:', response); 
-      if (response && response.token) {
-        localStorage.setItem('user', JSON.stringify(response));
+    this.authService.login(userData).subscribe({
+      next: (response) => {
+        console.log('Login response:', response);
+        if (response && response.token) {
+          localStorage.setItem('user', JSON.stringify(response));
 
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'success',
-          title: 'Đăng nhập thành công!',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true
-        });
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Đăng nhập thành công!',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+          });
 
-        // ⚠️ Phân quyền theo role
-        if (response.role === 'ROLE_ADMIN'||response.role === 'ROLE_STAFF') {
-          this.router.navigate(['/admin/list']);
-        } else if (response.role === 'ROLE_USER') {
-          this.router.navigate(['/home']);
+          // ⚠️ Phân quyền theo role
+          if (response.role === 'ROLE_ADMIN' || response.role === 'ROLE_STAFF') {
+            this.router.navigate(['/admin/list']);
+          } else if (response.role === 'ROLE_USER') {
+            this.router.navigate(['/home']);
+          } else {
+            Swal.fire('Lỗi', 'Tài Khoản chưa có trong hệ thống', 'error');
+          }
+
         } else {
-          Swal.fire('Lỗi', 'Tài Khoản chưa có trong hệ thống', 'error');
+          Swal.fire('Lỗi', 'Đăng nhập không thành công', 'error');
         }
-
-      } else {
-        Swal.fire('Lỗi', 'Đăng nhập không thành công', 'error');
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          Swal.fire('Lỗi đăng nhập', 'Email hoặc mật khẩu không đúng', 'error');
+        } else if (err.status === 403) {
+          Swal.fire('Lỗi Token', 'Không Có token ', 'error');
+        }
       }
-    },
-    error: (err) => {
-      if (err.status === 401) {
-        Swal.fire('Lỗi đăng nhập', 'Email hoặc mật khẩu không đúng', 'error');
-      } else if (err.status === 403) {
-        Swal.fire('Lỗi Token', 'Không Có token ', 'error');
-      }
-    }
-  });
-}
+    });
+  }
 
 
 }

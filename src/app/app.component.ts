@@ -5,9 +5,10 @@ import { FooterComponent } from './component/layout/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { AuthComponent } from './component/auth/auth.component';
 
+
 @Component({
   selector: 'app-root',
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
