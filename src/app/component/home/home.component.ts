@@ -35,50 +35,28 @@ export class HomeComponent implements OnInit {
     }
   }
 
-//   logout() {
-//   Swal.fire({
-//     title: 'Đăng xuất?',
-//     text: 'Bạn có chắc chắn muốn đăng xuất?',
-//     icon: 'warning',
-//     showCancelButton: true,
-//     confirmButtonText: 'Đăng xuất',
-//     cancelButtonText: 'Hủy',
-//   }).then(result => {
-//     if (result.isConfirmed) {
-//       this.authService.logout().subscribe({
-//         next: () => {
-//           // Xóa localStorage khi logout thành công
-//           localStorage.removeItem('user');
-
-//           // Chuyển hướng sau khi logout
-//           this.router.navigate(['/auth/login']);
-//         },
-//         error: (err) => {
-//           console.error('Lỗi khi đăng xuất:', err);
-//         },
-//       });
-//     }
-//   });
-// }
-  logout() {
-  Swal.fire({
-    title: 'Đăng xuất?',
-    text: 'Bạn có chắc chắn muốn đăng xuất?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Đăng xuất',
-    cancelButtonText: 'Hủy',
-  }).then(result => {
-    if (result.isConfirmed) {
-    
-
-          // Xóa localStorage khi logout thành công
-          localStorage.removeItem('user');
-
-          // Chuyển hướng sau khi logout
-          this.router.navigate(['/auth/login']);
-    }
-  });
-}
+logout() {
+    Swal.fire({
+      title: 'Đăng xuất?',
+      text: 'Bạn có chắc chắn muốn đăng xuất?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Đăng xuất',
+      cancelButtonText: 'Hủy',
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.authService.logout().subscribe({
+          next: () => {
+            this.router.navigate(['/auth/login']);
+          },
+          error: (err) => {
+            console.error('Lỗi khi đăng xuất:', err);
+          },
+        });
+      }
+    });
+    localStorage.removeItem('user');
+  }
+  
 
 }
