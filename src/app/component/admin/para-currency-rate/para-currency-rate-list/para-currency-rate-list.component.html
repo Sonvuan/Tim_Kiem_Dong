@@ -163,10 +163,7 @@
     </form>
 
     <div class="mb-3 d-flex justify-content-end">
-        <!-- <a [routerLink]="['/add']">
-            <button  class="btn btn-success" (click)="goToAdd()">Thêm mới</button>
-        </a> -->
-        <button class="btn btn-success" (click)="goToAdd()">Thêm mới</button>
+        <button *ngxPermissionsOnly="['ADMIN','WRITE']" class="btn btn-success" (click)="goToAdd()">Thêm mới</button>
     </div>
 
     <div class="table-responsive">
@@ -232,10 +229,10 @@
                             data-bs-target="#detailModal" (click)="selectedItem = item" title="Xem chi tiết">
                             <i class="bi bi-eye text-info fs-5"></i>
                         </button>
-                        <button class="btn btn-link p-0 me-2" (click)="goToEdit(item)" title="Sửa">
+                        <button *ngxPermissionsOnly="['ADMIN','WRITE']" class="btn btn-link p-0 me-2" (click)="goToEdit(item)" title="Sửa">
                             <i class="bi bi-pencil-square text-warning fs-5"></i>
                         </button>
-                        <button class="btn btn-link p-0" (click)="delete(item.id)" title="Xóa">
+                        <button *ngxPermissionsOnly="['ADMIN','DELETE']" class="btn btn-link p-0" (click)="delete(item.id)" title="Xóa">
                             <i class="bi bi-trash text-danger fs-5"></i>
                         </button>
                     </td>
@@ -262,10 +259,6 @@
 
 
         </div>
-        <!-- <pagination class="align-items-center d-flex justify-content-center" [totalItems]="totalElements"
-            [(ngModel)]="currentPage" [itemsPerPage]="pageSize" (pageChanged)="pageChanged($event)" [maxSize]="5"
-            [boundaryLinks]="true" previousText="Trước" nextText="Sau" firstText="Đầu" lastText="Cuối">
-        </pagination> -->
         <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Trước"
             nextLabel="Sau" [directionLinks]="true" class="d-flex justify-content-center mt-3">
         </pagination-controls>

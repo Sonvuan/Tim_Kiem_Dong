@@ -9,31 +9,73 @@ import { ParaCurrencyRateEditComponent } from './component/admin/para-currency-r
 import { AdminComponent } from './component/admin/admin.component';
 import { HomeComponent } from './component/home/home.component';
 import { ErrorComponent } from './component/error/error.component';
+import { NgxPermissionsGuard } from 'ngx-permissions';
+import { AcountComponent } from './component/admin/acount/acount.component';
+import { RoleComponent } from './component/admin/role/role.component';
+
 
 export const routes: Routes = [
     {
     path: 'auth',
-    component: AuthComponent,   // đây sẽ chứa child outlet
+    component: AuthComponent,  
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-    //   { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   },
-  {
-    path: 'admin',
-    component:AdminComponent,
-    children: [
-      {path:'list', component: ParaCurrencyRateListComponent},
-      {path: 'create', component: ParaCurrencyRateCreateComponent},
-      {path: 'edit', component: ParaCurrencyRateEditComponent},
-    ]
+ {
+  path: 'admin',
+  component: AdminComponent,
+  canActivate: [NgxPermissionsGuard],
+  data: {
+    permissions: {
+      only: ['ROLE_ADMIN', 'ROLE_STAFF'],  
+      redirectTo: '/403'                   
+    }
   },
+  children: [
+    {
+      path: 'acount',
+      component:AcountComponent
+    },
+    {
+      path:'role',
+      component:RoleComponent
+    },
+    { path: 'list', component: ParaCurrencyRateListComponent,
+      canActivate: [NgxPermissionsGuard],
+      data: {
+        permissions: {
+          only: ['ADMIN', 'WRITE'],  
+          redirectTo: '/403'                   
+        }
+      }
+     },
+    { path: 'create', component: ParaCurrencyRateCreateComponent, 
+      canActivate:[NgxPermissionsGuard],
+      data:{
+        permissions:{
+          only:['ADMIN','WRITE'],
+          redirectTo: '/403'  
+        }
+      }
+    },
+    { path: 'edit', component: ParaCurrencyRateEditComponent,
+      canActivate:[NgxPermissionsGuard],
+      data:{
+        permissions:{
+          only:['ADMIN','WRITE'],
+          redirectTo: '/403'  
+        }
+      }
+     },
+  ]
+},
+
+
    {path:'home',component:HomeComponent},
 
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-
- { path: '403', component: ErrorComponent },
   { path: '**', redirectTo: 'home' },
 
  

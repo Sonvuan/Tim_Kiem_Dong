@@ -1,22 +1,28 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';  // Import OnInit
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';  // Import OnInit
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.services';
+import { AuthService } from '../../../services/auth.services';
 import Swal from 'sweetalert2';
+import { NgxPermissionsModule, NgxPermissionsService } from 'ngx-permissions';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NgxPermissionsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
   sidebarOpen = false;
   name: string = '';
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,
+    private authService: AuthService,
+    private router: Router,
+    private ngxPermissionsService: NgxPermissionsService
+  )
+     { }
 
 
   toggleSidebar() {
@@ -24,18 +30,26 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  ngOnInit() {
-    
-      const userStr = localStorage.getItem('user');
-      if (userStr) {
-        try {
-          const user = JSON.parse(userStr);
-          this.name =  user.name || null;
-        } catch (e) {
-          console.error('Lỗi parse user từ localStorage:', e);
-        }
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.load();
+    }
+
+  }
+
+  load() {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.name = user.name || null;
+      
+      } catch (e) {
+        console.error('Lỗi parse user từ localStorage:', e);
+      }
     }
   }
+
 
   logout() {
     Swal.fire({

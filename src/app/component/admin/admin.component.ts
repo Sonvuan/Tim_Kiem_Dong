@@ -7,8 +7,8 @@ import { FooterComponent } from '../layout/footer/footer.component';
 
 @Component({
   selector: 'app-admin',
-   standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule,HeaderComponent,FooterComponent],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, FooterComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })

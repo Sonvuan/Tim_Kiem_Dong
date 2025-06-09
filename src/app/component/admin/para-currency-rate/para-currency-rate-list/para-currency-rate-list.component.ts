@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { ParaCurrencyRateService } from '../../../services/para-currency-rate.service';
+import { ParaCurrencyRateService } from '../../../../services/para-currency-rate.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+import { NgxPermissionsModule } from 'ngx-permissions';
+
 
 
 @Component({
   selector: 'app-para-currency-rate-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, RouterModule, NgxPaginationModule, NgxPermissionsModule],
   templateUrl: './para-currency-rate-list.component.html',
   styleUrls: ['./para-currency-rate-list.component.css']
 })

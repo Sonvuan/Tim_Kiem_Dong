@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, AfterViewInit, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
-import { AuthService } from '../services/auth.services';
+import { AuthService } from '../../services/auth.services';
 
 declare var bootstrap: any; // nếu bootstrap không có type, tạm khai báo any
 
@@ -18,13 +18,16 @@ declare var bootstrap: any; // nếu bootstrap không có type, tạm khai báo 
 export class HomeComponent implements OnInit {
 
   name: string = '';
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private authService: AuthService, private router: Router) { }
   ngOnInit(): void {
-    this.load();
+    if (isPlatformBrowser(this.platformId)) {
+      this.load();
+    }
+
   }
 
-  load(){
-   const userStr = localStorage.getItem('user');
+  load() {
+    const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
@@ -35,7 +38,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-logout() {
+  logout() {
     Swal.fire({
       title: 'Đăng xuất?',
       text: 'Bạn có chắc chắn muốn đăng xuất?',
@@ -57,6 +60,6 @@ logout() {
     });
     localStorage.removeItem('user');
   }
-  
+
 
 }

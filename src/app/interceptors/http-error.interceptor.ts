@@ -14,6 +14,7 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, n
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 403) {
+        
         router.navigate(['/403']);
       }
       return throwError(() => error);

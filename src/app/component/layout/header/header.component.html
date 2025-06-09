@@ -12,24 +12,28 @@
 
 
   <div class="sidebar" [class.open]="sidebarOpen">
-    <div class="user-info d-flex align-items-center p-3 border-bottom">
+    <div class="user-info d-flex align-items-center p-3">
       <i class="bi bi-person-circle fs-4 me-2"></i>
-      <span *ngIf="name" class="ms-2 fw-bold text-primary">
-        Xin chào, {{ name }}!
-      </span>
+      <span *ngIf="name" class="ms-2 fw-semibold text-primary">Xin chào, {{ name }}!</span>
     </div>
     <ul class="nav flex-column p-3">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/list" routerLinkActive="active">Dashboard</a>
+        <a class="nav-link" routerLink="/admin/list" routerLinkActive="active">
+          <i class="bi bi-speedometer2 me-2"></i> TRANG CHỦ
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/user" routerLinkActive="active">User</a>
+        <a *ngxPermissionsOnly="['ADMIN','WRITE']" class="nav-link" routerLink="/admin/acount" routerLinkActive="active">
+          <i class="bi bi-people-fill me-2"></i> TÀI KHOẢN
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/role" routerLinkActive="active">Role</a>
+        <a *ngxPermissionsOnly="['ADMIN']" class="nav-link" routerLink="/admin/role" routerLinkActive="active">
+          <i class="bi bi-shield-lock-fill me-2"></i> PHÂN QUYỀN
+        </a>
       </li>
-      <li class="nav-item">
-        <button class="btn btn-outline-danger w-100 mt-3" (click)="logout()">
+      <li class="nav-item mt-4">
+        <button class="btn btn-outline-danger w-100" (click)="logout()">
           <i class="bi bi-box-arrow-right me-2"></i> Đăng xuất
         </button>
       </li>

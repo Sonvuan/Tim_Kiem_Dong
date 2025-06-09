@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 ;
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { ParaCurrencyRateService } from '../../../services/para-currency-rate.service';
+import { ParaCurrencyRateService } from '../../../../services/para-currency-rate.service';
 
 @Component({
   selector: 'app-para-currency-rate-create',
