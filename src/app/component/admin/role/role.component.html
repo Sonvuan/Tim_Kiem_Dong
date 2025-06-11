@@ -1,1 +1,56 @@
-<p>role works!</p>
+<div class="container-center mt-5 mb-5 ">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-primary text-center">
+                <tr class="align-middle">
+                    <th>STT</th>
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Vai Trò</th>
+                    <th>Quyền</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of list; let i = index" class="text-center">
+                    <td class="text-center">{{ (currentPage) * pageSize + i + 1 }}</td>
+                    <td class="text-center">{{ item.id }}</td>
+                    <td class="text-center">{{ item.name }}</td>
+                    <td class="text-center">{{ item.email }}</td>
+                    <td class="text-center">
+                        <span *ngFor="let role of item.roles; let j = index">
+                            {{ role.name }}<span *ngIf="j < item.roles.length - 1">, </span>
+                        </span>
+                    </td>
+
+                    <td class="text-center">
+                        <span *ngFor="let perm of item.roles[0]?.permissions; let k = index">
+                            {{ perm.name }}<span *ngIf="k < item.roles[0].permissions.length - 1">, </span>
+                        </span>
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal"
+                            data-bs-target="#detailModal" (click)="selectedItem = item" title="Xem chi tiết">
+                            <i class="bi bi-eye"></i>
+                        </button>
+
+                        <!-- Nút sửa -->
+                        <!-- <button class="btn btn-sm btn-outline-primary me-2" (click)="openEditModal(item)"
+                            data-bs-toggle="modal" data-bs-target="#editModal" title="Sửa vai trò/quyền">
+                            <i class="bi bi-pencil"></i>
+                        </button> -->
+
+                        <!-- <button 
+                            class="btn btn-sm btn-outline-danger"
+                            (click)="delete(item.id)" title="Xóa">
+                        <i class="bi bi-trash"></i>
+                    </button> -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

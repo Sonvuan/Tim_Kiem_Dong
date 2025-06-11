@@ -20,4 +20,12 @@ export class AuthService {
  logout(): Observable<any> {
     return this.http.post<any>(`${API_URL}/logout`, {}, { withCredentials: true });
   }
+
+  list(data: any): Observable<any> {
+    return this.http.post<any>(`${API_URL}/list`,data, { withCredentials: true });
+  }
+   delete(id: number): Observable<any> {
+      return this.http.post(`${API_URL}/delete`, { id }, { responseType: 'text',withCredentials: true });
+    }
+  
 }

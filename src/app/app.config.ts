@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     ])
     ),
     provideAnimations(),
-    [importProvidersFrom(NgxPermissionsModule.forRoot())],
+    importProvidersFrom(NgxPermissionsModule.forRoot()),
 
   ],
 

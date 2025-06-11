@@ -71,7 +71,7 @@ export class HeaderComponent implements OnInit {
         });
       }
     });
-
+    localStorage.removeItem('user');
   }
 
 }

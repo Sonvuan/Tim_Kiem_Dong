@@ -15,70 +15,81 @@ import { RoleComponent } from './component/admin/role/role.component';
 
 
 export const routes: Routes = [
-    {
+  {
     path: 'auth',
-    component: AuthComponent,  
+    component: AuthComponent,
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
     ]
   },
- {
-  path: 'admin',
-  component: AdminComponent,
-  canActivate: [NgxPermissionsGuard],
-  data: {
-    permissions: {
-      only: ['ROLE_ADMIN', 'ROLE_STAFF'],  
-      redirectTo: '/403'                   
-    }
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [NgxPermissionsGuard],
+    data: {
+      permissions: {
+        only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+        redirectTo: '/403'
+      }
+    },
+    children: [
+      {
+        path: 'acount',
+        component: AcountComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+               only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+            
+          }
+        }
+      },
+      {
+        path: 'role',
+        component: RoleComponent
+      },
+      {
+        path: 'currency/list', component: ParaCurrencyRateListComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+               only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+    
+          }
+        }
+      },
+      {
+        path: 'currency/create', component: ParaCurrencyRateCreateComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+                only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+          }
+        }
+      },
+      {
+        path: 'currency/edit', component: ParaCurrencyRateEditComponent,
+        canActivate: [NgxPermissionsGuard],
+        data: {
+          permissions: {
+              only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+           
+          }
+        }
+      },
+    ]
   },
-  children: [
-    {
-      path: 'acount',
-      component:AcountComponent
-    },
-    {
-      path:'role',
-      component:RoleComponent
-    },
-    { path: 'list', component: ParaCurrencyRateListComponent,
-      canActivate: [NgxPermissionsGuard],
-      data: {
-        permissions: {
-          only: ['ADMIN', 'WRITE'],  
-          redirectTo: '/403'                   
-        }
-      }
-     },
-    { path: 'create', component: ParaCurrencyRateCreateComponent, 
-      canActivate:[NgxPermissionsGuard],
-      data:{
-        permissions:{
-          only:['ADMIN','WRITE'],
-          redirectTo: '/403'  
-        }
-      }
-    },
-    { path: 'edit', component: ParaCurrencyRateEditComponent,
-      canActivate:[NgxPermissionsGuard],
-      data:{
-        permissions:{
-          only:['ADMIN','WRITE'],
-          redirectTo: '/403'  
-        }
-      }
-     },
-  ]
-},
 
 
-   {path:'home',component:HomeComponent},
+  { path: 'home', component: HomeComponent },
+
+  { path: '403', component: ErrorComponent },
 
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' },
 
- 
+
 
 
 ];

@@ -77,7 +77,7 @@ export class ParaCurrencyRateEditComponent implements OnInit {
           timer: 3000,
           timerProgressBar: true
         });
-        this.router.navigate(['/admin/list']);
+        this.router.navigate(['/admin/currency/list']);
       },
       error: () => {
         Swal.fire({
@@ -94,7 +94,7 @@ export class ParaCurrencyRateEditComponent implements OnInit {
   }
 
   backForm(): void {
-    this.router.navigate(['/admin/list']);
+    this.router.navigate(['/admin/currency/list']);
   }
 
 } 

@@ -6,7 +6,7 @@ import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
-import { NgxPermissionsModule } from 'ngx-permissions';
+import { NgxPermissionsModule, NgxPermissionsService } from 'ngx-permissions';
 
 
 
@@ -59,12 +59,14 @@ export class ParaCurrencyRateListComponent implements OnInit {
   constructor(
     private service: ParaCurrencyRateService,
     private router: Router,
+    private ngxPermissionsService: NgxPermissionsService
   ) { }
 
   ngOnInit(): void {
     this.loadList();
     // this.search();
     this.getCountry();
+   
     // this.search(1, this.pageSize); 
   }
 
@@ -75,12 +77,10 @@ export class ParaCurrencyRateListComponent implements OnInit {
     const searchBody = {
       page: page - 1,
       size: size
-
     };
 
     this.service.list(searchBody).subscribe({
       next: data => {
-
         this.list = data.content;
         this.totalElements = data.totalElements;
         this.totalPages = data.totalPages;
@@ -254,12 +254,12 @@ export class ParaCurrencyRateListComponent implements OnInit {
 
   // Chuyển trang thêm mới
   goToAdd() {
-    this.router.navigate(['/admin/create']);
+    this.router.navigate(['/admin/currency/create']);
   }
 
   // Chuyển trang sửa
   goToEdit(item: any) {
-    this.router.navigate(['/admin/edit'], {
+    this.router.navigate(['/admin/currency/edit'], {
       state: { data: item }
     });
   }

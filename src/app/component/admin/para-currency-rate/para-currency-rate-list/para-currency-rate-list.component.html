@@ -73,7 +73,7 @@
                 placeholder="Quốc gia" />
         </div> -->
         <div class="col-md-3">
-             <label for="country" class="form-label">Quốc gia</label>
+            <label for="country" class="form-label">Quốc gia</label>
             <select class="form-control" [(ngModel)]="searchInput.country" name="lopId">
                 <option [value]="''">-- Chọn Quốc Gia --</option>
                 <option *ngFor="let maItem of countryList" [value]="maItem.name">
@@ -229,10 +229,12 @@
                             data-bs-target="#detailModal" (click)="selectedItem = item" title="Xem chi tiết">
                             <i class="bi bi-eye text-info fs-5"></i>
                         </button>
-                        <button *ngxPermissionsOnly="['ADMIN','WRITE']" class="btn btn-link p-0 me-2" (click)="goToEdit(item)" title="Sửa">
+                        <button *ngxPermissionsOnly="['ADMIN','WRITE']" class="btn btn-link p-0 me-2"
+                            (click)="goToEdit(item)" title="Sửa">
                             <i class="bi bi-pencil-square text-warning fs-5"></i>
                         </button>
-                        <button *ngxPermissionsOnly="['ADMIN','DELETE']" class="btn btn-link p-0" (click)="delete(item.id)" title="Xóa">
+                        <button *ngxPermissionsOnly="['ADMIN','DELETE']" class="btn btn-link p-0"
+                            (click)="delete(item.id)" title="Xóa">
                             <i class="bi bi-trash text-danger fs-5"></i>
                         </button>
                     </td>
@@ -264,7 +266,6 @@
         </pagination-controls>
 
     </div>
-
 </div>
 <!-- Modal xem chi tiết -->
 <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">

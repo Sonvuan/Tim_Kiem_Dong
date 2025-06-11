@@ -36,8 +36,7 @@ export class LoginComponent {
         console.log('Login response:', response);
         if (response && response.token) {
           localStorage.setItem('user', JSON.stringify(response));
-          this.ngxPermissionsService.loadPermissions([response.role, response.permission]);
-
+          this.ngxPermissionsService.loadPermissions(response.role.concat(response.permission)); 
           Swal.fire({
             toast: true,
             position: 'top-end',
@@ -47,13 +46,14 @@ export class LoginComponent {
             timer: 3000,
             timerProgressBar: true
           });
-          if (response.role === 'ROLE_ADMIN' || response.role === 'ROLE_STAFF') {
-            this.router.navigate(['/admin/list']);
-          } else if (response.role === 'ROLE_USER') {
+          if (response.role.includes('ROLE_ADMIN') || response.role.includes('ROLE_STAFF')) {
+            this.router.navigate(['/admin/currency/list']);
+          } else if (response.role.includes('ROLE_USER')) {
             this.router.navigate(['/home']);
           } else {
             Swal.fire('Lỗi', 'Tài Khoản chưa có trong hệ thống', 'error');
           }
+
 
         } else {
           Swal.fire('Lỗi', 'Đăng nhập không thành công', 'error');
