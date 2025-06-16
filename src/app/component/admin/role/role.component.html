@@ -35,7 +35,7 @@
 
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal"
-                            data-bs-target="#detailModal" (click)="selectedItem = item" title="Xem chi tiết">
+                            data-bs-target="#detailModal" (click)="openDetail(item)" title="Xem chi tiết">
                             <i class="bi bi-eye"></i>
                         </button>
 
@@ -134,11 +134,12 @@
                             </option>
                         </select>
                     </div>
-                      <div class="mb-3">
+                    <div class="mb-3">
                         <label class="form-label fw-bold">Quyền:</label>
-                        <select class="form-select" [(ngModel)]="selectedItem.permission" [disabled]="!isEditing" multiple>
-                            <option *ngFor="let permission of availablePermissions" [ngValue]="permission">
-                                {{ permission.name }}
+                        <select class="form-select" [(ngModel)]="selectedItem.permissions" [disabled]="!isEditing"
+                            multiple>
+                            <option *ngFor="let role of availablePermissions" [ngValue]="role">
+                                {{ role.name }}
                             </option>
                         </select>
                     </div>
@@ -165,21 +166,28 @@
 
 
                 <div class="modal-footer">
-                    <button *ngIf="!isEditing; else deleteBtn" class="btn btn-warning" (click)="isEditing = true">
+                    <button *ngIf="!isEditing; else saveBtn" class="btn btn-warning" (click)="isEditing = true">
                         <i class="bi bi-pencil-square"></i> Chỉnh sửa
                     </button>
 
-                    <button *ngIf="isEditing" class="btn btn-success" (click)="saveAll()">
-                        <i class="bi bi-save"></i> Lưu
-                    </button>
-
-                    <ng-template #deleteBtn>
-                        <button class="btn btn-danger" (click)="saveDele()">
-                            <i class="bi bi-trash"></i> Xoá
+                    <ng-template #saveBtn>
+                        <button class="btn btn-success" (click)="saveAll()">
+                            <i class="bi bi-save"></i> Lưu
                         </button>
                     </ng-template>
 
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="isEditing = false">
+                    <!-- Các nút xóa (chỉ hiện khi không chỉnh sửa) -->
+                    <div *ngIf="isEditing" class="d-inline">
+                        <button class="btn btn-danger me-2" (click)="saveDele()">
+                            <i class="bi bi-trash"></i> Xoá Vai Trò
+                        </button>
+                        <button class="btn btn-danger" (click)="saveDelePermission()">
+                            <i class="bi bi-trash"></i> Xoá Quyền
+                        </button>
+                    </div>
+
+                    <!-- Nút đóng -->
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">
                         Đóng
                     </button>
                 </div>

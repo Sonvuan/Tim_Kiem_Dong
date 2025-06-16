@@ -12,8 +12,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of list; let i = index" class="text-center">
-                <td class="text-center">{{ (currentPage) * pageSize + i + 1 }}</td>
+            <tr *ngFor="let item of list | paginate: { itemsPerPage: pageSize, currentPage: currentPage , totalItems:totalElements  }; let i = index" class="text-center">
+                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                 <td class="text-center">{{ item.id }}</td>
                 <td class="text-center">{{ item.name }}</td>
                 <td class="text-center">{{ item.email }}</td>
@@ -36,6 +36,12 @@
     </table>
 </div>
 </div>
+   <div class="text-end text-secondary" *ngIf="list && list.length">
+        Tổng số bản ghi: <b>{{ totalElements }}</b>
+   </div>
+       <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" previousLabel="Trước"
+            nextLabel="Sau" [directionLinks]="true" class="d-flex justify-content-center mt-3">
+        </pagination-controls>
 <!-- Modal xem chi tiết -->
 <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
