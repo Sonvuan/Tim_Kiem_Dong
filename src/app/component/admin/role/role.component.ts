@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth.services';
 import e from 'express';
 import { error } from 'console';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-role',
@@ -29,6 +30,9 @@ export class RoleComponent {
   availableRoles: any[] = [];
   permissionsOfSelectedRoles: string[] = [];
 
+  selectedRole: string = '';
+  selectedPermission: string = '';
+
 
   availablePermissions: any[] = [];
   constructor(
@@ -36,7 +40,6 @@ export class RoleComponent {
     private service: AuthService,
     private router: Router,
   ) { }
-
 
   ngOnInit(): void {
     this.load();
@@ -48,7 +51,7 @@ export class RoleComponent {
     const data = {}
     this.service.list(data).subscribe({
       next: (response: any) => {
-        this.list = response;
+        this.list = response.content;
       }
 
     });
@@ -109,6 +112,9 @@ export class RoleComponent {
     });
   }
 
+
+
+
   saveDele() {
     const payload = {
       id: this.selectedItem.id,
@@ -130,6 +136,26 @@ export class RoleComponent {
     });
   }
 
+  saveDelePermission() {
+      const permissionPayload = {
+    id: this.selectedItem.id,
+    role: this.selectedItem.roles[0]?.name,
+    permission: this.selectedItem.permissions[0]?.name
+  };
+    this.service1.removePermission(permissionPayload).subscribe({
+      next: () => {
+        this.isDelete = false;
+        this.load();
+        this.loadRoles();
+
+        Swal.fire('Thành công', `Đã xoá quyền `, 'success');
+      },
+      error: (err) => {
+        console.error('Xoá quyền thất bại:', err);
+        Swal.fire('Lỗi', 'Không thể xoá quyền!', 'error');
+      }
+    });
+  }
 
 
   getUniquePermissions(item: any): string[] {
@@ -142,7 +168,6 @@ export class RoleComponent {
 
   openDetail(item: any) {
     this.selectedItem = item;
-
 
   }
 }

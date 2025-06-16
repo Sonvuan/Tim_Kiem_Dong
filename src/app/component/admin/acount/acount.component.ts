@@ -18,6 +18,7 @@ export class AcountComponent implements OnInit {
   list: any[] = [];
   pageSize: number = 5;
   currentPage: number = 0;
+  totalElements: number = 0;
   selectedItem: any;
 constructor(
     private service: AuthService,
@@ -29,15 +30,29 @@ constructor(
   }
 
 
-  load(){
-    const data= {}
+  load(page: number = 1, size: number = this.pageSize){
+    const data= {
+
+      page: page - 1,
+      size: size,
+    }
     this.service.list(data).subscribe({
       next: (response: any) => {
-        this.list = response;
+        this.list = response.content;
+        this.totalElements = response.totalElements;
+        this.currentPage = response.page + 1;
+        this.pageSize = response.size;
       }
       
     });
   }
+
+  pageChanged(event: any) {
+    this.currentPage = event;
+    this.load( this.currentPage, this.pageSize);
+  }
+
+  
   delete(id?: number) {
       if (!id) return;
       Swal.fire({

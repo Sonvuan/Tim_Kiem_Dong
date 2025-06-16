@@ -23,6 +23,9 @@ export class RoleService {
         return this.http.post(`${API_URL}/permission/getAllPermission`, data, { withCredentials: true });
     }
     updatePermission(data: any): Observable<any> {
-        return this.http.post(`${API_URL}/permission/updatePermission`, data, { withCredentials: true });
+        return this.http.post(`${API_URL}/permission/UpdatePermission`, data, { withCredentials: true });
+    }
+    removePermission(data: any): Observable<any> {
+        return this.http.post(`${API_URL}/permission/RemovePermission`, data, { withCredentials: true });
     }
 }
