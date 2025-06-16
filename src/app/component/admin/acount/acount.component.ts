@@ -59,6 +59,7 @@ constructor(
                 timer: 3000,
                 timerProgressBar: true
               });
+              this.load();
             },
             error: () => {
               Swal.fire({

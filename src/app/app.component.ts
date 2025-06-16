@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { RouterModule, RouterOutlet, Router } from '@angular/router';
 import { HeaderComponent } from './component/layout/header/header.component';
 import { FooterComponent } from './component/layout/footer/footer.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AuthComponent } from './component/auth/auth.component';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 
 @Component({
@@ -14,8 +15,22 @@ import { AuthComponent } from './component/auth/auth.component';
 })
 
 
-export class AppComponent {
+export class AppComponent implements OnInit {
+  constructor(
+    private ngxPermissionsService: NgxPermissionsService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const userJson = localStorage.getItem('user');
+       if (userJson) {
+        const user = JSON.parse(userJson);
+        const roles: string[] = user.role || [];
+        const permissions: string[] = user.permission || [];
 
-
+        this.ngxPermissionsService.loadPermissions([...roles, ...permissions]);
+      }
+    }
+  }
 }

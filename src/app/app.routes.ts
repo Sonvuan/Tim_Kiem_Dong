@@ -12,6 +12,7 @@ import { ErrorComponent } from './component/error/error.component';
 import { NgxPermissionsGuard } from 'ngx-permissions';
 import { AcountComponent } from './component/admin/acount/acount.component';
 import { RoleComponent } from './component/admin/role/role.component';
+import { AuthGuard } from './services/auth.guard';
 
 
 export const routes: Routes = [
@@ -26,22 +27,22 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: [NgxPermissionsGuard],
+    canActivate: [AuthGuard],
     data: {
       permissions: {
         only: ['ROLE_ADMIN', 'ROLE_STAFF'],
-        redirectTo: '/403'
+      
       }
     },
     children: [
       {
         path: 'acount',
         component: AcountComponent,
-        canActivate: [NgxPermissionsGuard],
+        canActivate: [AuthGuard],
         data: {
           permissions: {
                only: ['ROLE_ADMIN', 'ROLE_STAFF'],
-            
+              
           }
         }
       },
@@ -51,17 +52,17 @@ export const routes: Routes = [
       },
       {
         path: 'currency/list', component: ParaCurrencyRateListComponent,
-        canActivate: [NgxPermissionsGuard],
+        canActivate: [AuthGuard],
         data: {
           permissions: {
                only: ['ROLE_ADMIN', 'ROLE_STAFF'],
-    
+              redirectTo:'/admin/currency/list'
           }
         }
       },
       {
         path: 'currency/create', component: ParaCurrencyRateCreateComponent,
-        canActivate: [NgxPermissionsGuard],
+        canActivate: [AuthGuard],
         data: {
           permissions: {
                 only: ['ROLE_ADMIN', 'ROLE_STAFF'],
@@ -70,7 +71,7 @@ export const routes: Routes = [
       },
       {
         path: 'currency/edit', component: ParaCurrencyRateEditComponent,
-        canActivate: [NgxPermissionsGuard],
+        canActivate: [AuthGuard],
         data: {
           permissions: {
               only: ['ROLE_ADMIN', 'ROLE_STAFF'],

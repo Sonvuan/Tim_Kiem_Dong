@@ -28,4 +28,38 @@ export class AuthService {
       return this.http.post(`${API_URL}/delete`, { id }, { responseType: 'text',withCredentials: true });
     }
   
+
+    // auth.services.ts
+
+getUser(): any {
+   if (typeof localStorage === 'undefined') {
+    return null;
+  }
+  const userString = localStorage.getItem('user');
+  return userString ? JSON.parse(userString) : null;
+}
+
+isLoggedIn(): boolean {
+  return !!localStorage.getItem('user');
+}
+
+getToken(): string | null {
+  const user = this.getUser();
+  return user?.token || null;
+}
+
+getRoles(): string[] {
+  const user = this.getUser();
+  return user?.role || [];
+}
+
+getPermissions(): string[] {
+  const user = this.getUser();
+  return user?.permission || [];
+}
+
+clearUser(): void {
+  localStorage.removeItem('user');
+}
+
 }

@@ -163,7 +163,7 @@
     </form>
 
     <div class="mb-3 d-flex justify-content-end">
-        <button *ngxPermissionsOnly="['ADMIN','WRITE']" class="btn btn-success" (click)="goToAdd()">Thêm mới</button>
+        <button *ngxPermissionsOnly="['ADMIN','CREATE']" class="btn btn-success" (click)="goToAdd()">Thêm mới</button>
     </div>
 
     <div class="table-responsive">
@@ -229,7 +229,7 @@
                             data-bs-target="#detailModal" (click)="selectedItem = item" title="Xem chi tiết">
                             <i class="bi bi-eye text-info fs-5"></i>
                         </button>
-                        <button *ngxPermissionsOnly="['ADMIN','WRITE']" class="btn btn-link p-0 me-2"
+                        <button *ngxPermissionsOnly="['ADMIN','UPDATE']" class="btn btn-link p-0 me-2"
                             (click)="goToEdit(item)" title="Sửa">
                             <i class="bi bi-pencil-square text-warning fs-5"></i>
                         </button>

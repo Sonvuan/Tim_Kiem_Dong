@@ -63,11 +63,12 @@ export class ParaCurrencyRateListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+      
     this.loadList();
     // this.search();
     this.getCountry();
    
-    // this.search(1, this.pageSize); 
+
   }
 
 
