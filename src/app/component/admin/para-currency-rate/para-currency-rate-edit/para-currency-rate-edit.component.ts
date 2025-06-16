@@ -2,7 +2,7 @@ import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ParaCurrencyRateService } from '../../../services/para-currency-rate.service';
+import { ParaCurrencyRateService } from '../../../../services/para-currency-rate.service';
 
 import Swal from 'sweetalert2';
 
@@ -77,7 +77,7 @@ export class ParaCurrencyRateEditComponent implements OnInit {
           timer: 3000,
           timerProgressBar: true
         });
-        this.router.navigate(['/admin/list']);
+        this.router.navigate(['/admin/currency/list']);
       },
       error: () => {
         Swal.fire({
@@ -94,7 +94,7 @@ export class ParaCurrencyRateEditComponent implements OnInit {
   }
 
   backForm(): void {
-    this.router.navigate(['/admin/list']);
+    this.router.navigate(['/admin/currency/list']);
   }
 
 } 

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const API_URL = 'http://localhost:8080/admin';
-const API_URL1 = 'http://localhost:8080/Country';
+
 
 @Injectable({ providedIn: 'root' })
 export class ParaCurrencyRateService {
@@ -11,7 +11,7 @@ export class ParaCurrencyRateService {
   constructor(private http: HttpClient) { }
 
   getAll(data: any): Observable<any> {
-    return this.http.post(`${API_URL1}/getAll`, data,{ withCredentials: true });
+    return this.http.post(`${API_URL}/Country/getAll`, data,{ withCredentials: true });
 
   }
 

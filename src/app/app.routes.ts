@@ -9,34 +9,88 @@ import { ParaCurrencyRateEditComponent } from './component/admin/para-currency-r
 import { AdminComponent } from './component/admin/admin.component';
 import { HomeComponent } from './component/home/home.component';
 import { ErrorComponent } from './component/error/error.component';
+import { NgxPermissionsGuard } from 'ngx-permissions';
+import { AcountComponent } from './component/admin/acount/acount.component';
+import { RoleComponent } from './component/admin/role/role.component';
+import { AuthGuard } from './services/auth.guard';
+
 
 export const routes: Routes = [
-    {
+  {
     path: 'auth',
-    component: AuthComponent,   // đây sẽ chứa child outlet
+    component: AuthComponent,
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-    //   { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   },
   {
     path: 'admin',
-    component:AdminComponent,
+    component: AdminComponent,
+    canActivate: [AuthGuard],
+    data: {
+      permissions: {
+        only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+      
+      }
+    },
     children: [
-      {path:'list', component: ParaCurrencyRateListComponent},
-      {path: 'create', component: ParaCurrencyRateCreateComponent},
-      {path: 'edit', component: ParaCurrencyRateEditComponent},
+      {
+        path: 'acount',
+        component: AcountComponent,
+        canActivate: [AuthGuard],
+        data: {
+          permissions: {
+               only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+              
+          }
+        }
+      },
+      {
+        path: 'role',
+        component: RoleComponent
+      },
+      {
+        path: 'currency/list', component: ParaCurrencyRateListComponent,
+        canActivate: [AuthGuard],
+        data: {
+          permissions: {
+               only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+              redirectTo:'/admin/currency/list'
+          }
+        }
+      },
+      {
+        path: 'currency/create', component: ParaCurrencyRateCreateComponent,
+        canActivate: [AuthGuard],
+        data: {
+          permissions: {
+                only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+          }
+        }
+      },
+      {
+        path: 'currency/edit', component: ParaCurrencyRateEditComponent,
+        canActivate: [AuthGuard],
+        data: {
+          permissions: {
+              only: ['ROLE_ADMIN', 'ROLE_STAFF'],
+           
+          }
+        }
+      },
     ]
   },
-   {path:'home',component:HomeComponent},
+
+
+  { path: 'home', component: HomeComponent },
+
+  { path: '403', component: ErrorComponent },
 
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-
- { path: '403', component: ErrorComponent },
   { path: '**', redirectTo: 'home' },
 
- 
+
 
 
 ];

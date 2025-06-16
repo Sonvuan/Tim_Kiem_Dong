@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.services';
+import { AuthService } from '../../../services/auth.services';
 import Swal from 'sweetalert2';
-
+import { NgxPermissionsModule, NgxPermissionsService } from 'ngx-permissions'; // Thêm import cho NgxPermissionsModule
 
 
 @Component({
@@ -15,120 +15,77 @@ import Swal from 'sweetalert2';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent   {
   email: string = '';
   password: string = '';
-  role: string = '';
 
   constructor(
     private router: Router,
     private authService: AuthService,
-
-
+    private ngxPermissionsService: NgxPermissionsService
   ) { }
 
-  // submit() {
-  //   const userData = {
-  //     email: this.email,
-  //     password: this.password,
-  //   };
+submit() {
+  const userData = {
+    email: this.email,
+    password: this.password,
+  };
 
-  //   this.authService.login(userData).subscribe({
-  //     next: (response) => {
-  //       if (response && response.token) {
-  //         localStorage.setItem('user', JSON.stringify(response));
-  //         Swal.fire({
-  //             toast: true,
-  //             position: 'top-end',
-  //             icon: 'success',
-  //             title: 'Đăng nhập thành công!',
-  //             showConfirmButton: false,
-  //             timer: 3000,
-  //             timerProgressBar: true
-  //           });
-  //         this.router.navigate(['/admin/list']);
-  //       } else {
-  //         Swal.fire('Lỗi', 'Đăng nhập không thành công', 'error');
-  //       }
-  //     },
-  //     error: (err) => {
-  //       if (err.status === 401) {
-  //         Swal.fire('Lỗi đăng nhập', 'Email hoặc mật khẩu không đúng', 'error');
-  //       } else if (err.status === 403) {
-  //         Swal.fire('Lỗi Token', 'Không Có token ', 'error');
-  //       }
-  //     }
-  //   });
+  this.authService.login(userData).subscribe({
+    next: (response) => {
+      console.log('Login response:', response);
+      if (response && response.token) {
+        // 🔥 Flatten permission object thành mảng
+        const flatPermissions: string[] = [];
 
-  //   // không trả về token, chỉ trả về user
-  //   // this.authService.login(userData).subscribe({
-  //   //   next: () => {
-  //   //     Swal.fire({
-  //   //       toast: true,
-  //   //       position: 'top-end',
-  //   //       icon: 'success',
-  //   //       title: 'Đăng nhập thành công!',
-  //   //       showConfirmButton: false,
-  //   //       timer: 3000,
-  //   //       timerProgressBar: true
-  //   //     });
-  //   //     this.router.navigate(['/admin/list']);
-  //   //   },
-  //   //   error: (err) => {
-  //   //     if (err.status === 401) {
-  //   //       Swal.fire('Lỗi đăng nhập', 'Email hoặc mật khẩu không đúng', 'error');
-  //   //     } else if (err.status === 403) {
-  //   //       Swal.fire('Lỗi Token', 'Không Có token ', 'error');
-  //   //     }
-  //   //   }
-  //   // });
-
-  // }
-  submit() {
-    const userData = {
-      email: this.email,
-      password: this.password,
-      role: this.role,
-    };
-
-    this.authService.login(userData).subscribe({
-      next: (response) => {
-        console.log('Login response:', response);
-        if (response && response.token) {
-          localStorage.setItem('user', JSON.stringify(response));
-
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: 'Đăng nhập thành công!',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-          });
-
-          // ⚠️ Phân quyền theo role
-          if (response.role === 'ROLE_ADMIN' || response.role === 'ROLE_STAFF') {
-            this.router.navigate(['/admin/list']);
-          } else if (response.role === 'ROLE_USER') {
-            this.router.navigate(['/home']);
-          } else {
-            Swal.fire('Lỗi', 'Tài Khoản chưa có trong hệ thống', 'error');
+        if (response.permission && typeof response.permission === 'object') {
+          for (const role in response.permission) {
+            flatPermissions.push(role); // thêm ROLE_STAFF, ROLE_USER
+            flatPermissions.push(...response.permission[role]); // thêm VIEW, EDIT,...
           }
+        }
 
+        // 🔄 Ghi đè lại response.permission thành array để AuthGuard dùng được
+        response.permission = flatPermissions;
+
+        // Lưu localStorage
+        localStorage.setItem('user', JSON.stringify(response));
+
+        // Load quyền cho ngx-permissions
+        this.ngxPermissionsService.loadPermissions(response.role.concat(flatPermissions));
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Đăng nhập thành công!',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true
+        });
+
+        // Điều hướng
+        if (response.role.includes('ROLE_ADMIN') || response.role.includes('ROLE_STAFF')) {
+          this.router.navigate(['/admin/currency/list']);
+        } else if (response.role.includes('ROLE_USER')) {
+          this.router.navigate(['/home']);
         } else {
-          Swal.fire('Lỗi', 'Đăng nhập không thành công', 'error');
+          Swal.fire('Lỗi', 'Tài Khoản chưa có trong hệ thống', 'error');
         }
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          Swal.fire('Lỗi đăng nhập', 'Email hoặc mật khẩu không đúng', 'error');
-        } else if (err.status === 403) {
-          Swal.fire('Lỗi Token', 'Không Có token ', 'error');
-        }
+      } else {
+        Swal.fire('Lỗi', 'Đăng nhập không thành công', 'error');
       }
-    });
-  }
+    },
+    error: (err) => {
+      if (err.status === 401) {
+        Swal.fire('Lỗi đăng nhập', 'Email hoặc mật khẩu không đúng', 'error');
+      } else if (err.status === 403) {
+        Swal.fire('Lỗi Token', 'Không Có token ', 'error');
+      }
+    }
+  });
+}
+
 
 
 }
