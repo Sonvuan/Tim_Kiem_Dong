@@ -35,7 +35,7 @@ submit() {
     next: (response) => {
       console.log('Login response:', response);
       if (response && response.token) {
-        // 🔥 Flatten permission object thành mảng
+
         const flatPermissions: string[] = [];
 
         if (response.permission && typeof response.permission === 'object') {

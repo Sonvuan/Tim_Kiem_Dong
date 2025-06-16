@@ -27,6 +27,7 @@ export class RoleComponent {
   pageSize: number = 5;
   isEditing = false;
   isDelete = false;
+  totalElements: number = 0;
   availableRoles: any[] = [];
   permissionsOfSelectedRoles: string[] = [];
 
@@ -46,15 +47,26 @@ export class RoleComponent {
     this.loadRoles();
   }
 
+  load(page: number = 1, size: number = this.pageSize){
+    const data= {
 
-  load() {
-    const data = {}
+      page: page - 1,
+      size: size,
+    }
     this.service.list(data).subscribe({
       next: (response: any) => {
         this.list = response.content;
+        this.totalElements = response.totalElements;
+        this.currentPage = response.page + 1;
+        this.pageSize = response.size;
       }
-
+      
     });
+  }
+
+  pageChanged(event: any) {
+    this.currentPage = event;
+    this.load( this.currentPage, this.pageSize);
   }
   loadRoles() {
     const data = {};
